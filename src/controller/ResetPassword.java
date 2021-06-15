@@ -53,10 +53,10 @@ public class ResetPassword extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 			dispatcher.forward(request, response);
 			
-        } else if (password.equals("")){
+        } if (password.equals("")){
         	request.setAttribute("email", email);
             request.setAttribute("password", password);
-            request.setAttribute("passError", "Please enter your new password!");
+            request.setAttribute("passwordError", "Please enter your new password!");
             url="reset-password.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 			dispatcher.forward(request, response);

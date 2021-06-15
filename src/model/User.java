@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name="Users")
@@ -24,7 +25,7 @@ public class User {
 	@Column(name="id")
 	protected int id;
 	
-	@Column(name="email")
+	@Column(name="email", unique = true)
 	protected String email;
 	
 	@Column(name="pass")

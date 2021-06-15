@@ -72,37 +72,24 @@ public class Signup extends HttpServlet {
 		}
 		
 				
-		if (!email.equals("") && !fullname.equals("") && !password.equals("")) {
-			try {
-				User newUser = new User(email, password, fullname, gender);
-				
-				if (!birthdate_str.equals("")) {
-					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-					Date birthdate = df.parse(birthdate_str);
-					newUser.setBirthdate(birthdate);
+		if (!email.equals("") && !fullname.equals("") && !password.equals("") && userDao.EmailExist(email)==null) {
+			User newUser = new User(email, password, fullname, gender);	
+			if (!birthdate_str.equals("")) {
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				Date birthdate = df.parse(birthdate_str);
+				newUser.setBirthdate(birthdate);
 				}
-				
-				//url="/signup-confirm.jsp";
-				//request.getSession().setAttribute( "newuser", newUser);
-                //String code = MailAPI.Send(email);
-                //request.getSession().setAttribute("code",code);
-					
-				userDao.saveUser(newUser);
-				Tag defaultTag = new Tag(0, "Other", "#cccccc", newUser);
-				tagDao.saveTag(defaultTag);
-				
-				url="/login.jsp";
-				
-					
-			} catch (Exception e) {
-				url="/signup.jsp";
-				request.setAttribute("emailError", "* Email registered");	
-			}
+			userDao.saveUser(newUser);	
+			Tag defaultTag = new Tag(0, "Other", "#cccccc", newUser);
+			tagDao.saveTag(defaultTag);
+			url="/login.jsp";										
+			} 
+		else
+		{
+			url="/signup.jsp";
+			request.setAttribute("emailError", "* Email registered");		
 		}
-			
-
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
 		dispatcher.forward(request, response);
 	}
-
 }
