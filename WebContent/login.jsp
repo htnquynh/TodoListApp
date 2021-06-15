@@ -132,7 +132,7 @@
 	<div class="right-decor">
     	<h3>Welcome to Todo App</h3>
     	<p>Having a list of all your tasks will allow you to sit down and make a plan. One study showed that fifteen minutes spent planning could save an hour of execution time!</p>
-    	<a href="${pageContext.request.contextPath}/login.jsp">
+    	<a href="${pageContext.request.contextPath}/signup.jsp">
     	<svg xmlns="http://www.w3.org/2000/svg" 
     			enable-background="new 0 0 24 24" 
     			height="16px" viewBox="0 0 24 24" 
