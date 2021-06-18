@@ -189,6 +189,8 @@
 
                         <input type="submit" value="Upload profile" class="btn-submit-on-form">
                     </div>
+                            	<input type="hidden" name="CSRFToken" value="">
+                    
                 </form>            
             </div>
         </div>

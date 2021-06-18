@@ -189,7 +189,7 @@
 
                 </div>
             <input type="submit" value="Sign Up" class="btn-submit-on-form">
-            
+            <input type="hidden" name="CSRFToken" value="">
         </form>
     </div>
     

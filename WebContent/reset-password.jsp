@@ -183,7 +183,9 @@
 	              </div>
 	        </div>
 	    </div>            
-	    <input type="submit" value="Reset" class="btn-submit-on-form"> 
+	    <input type="submit" value="Reset" class="btn-submit-on-form">
+	            	<input type="hidden" name="CSRFToken" value="">
+	     
 	 </form> 
     </div>
     

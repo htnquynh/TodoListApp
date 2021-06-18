@@ -177,14 +177,9 @@
             <div class="forget-password">
         		<a href="${pageContext.request.contextPath}/reset-password.jsp">Forget your password?</a>
         	</div>
+        	<input type="hidden" name="CSRFToken" value="">
         </form>
-        
-        
-        
     </div>
-    
-    
-
     <script src="${pageContext.request.contextPath}/js/todoform.js"></script>
     <%-- <script src="${pageContext.request.contextPath}/js/signupmodal.js"></script> --%>
 
