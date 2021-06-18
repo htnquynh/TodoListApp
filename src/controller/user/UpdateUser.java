@@ -23,7 +23,6 @@ import model.User;
 public class UpdateUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
-	HttpSession session = null;
        
     public UpdateUser() {
         super();
@@ -32,7 +31,7 @@ public class UpdateUser extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		session = request.getSession(true);
+		
 		try {
 			updateUser(request, response);
 		} catch (SQLException e) {
@@ -53,7 +52,8 @@ public class UpdateUser extends HttpServlet {
 	
 	private void updateUser(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
+
+		HttpSession session = request.getSession(false);
 		String email = request.getParameter("email").trim();
 		String password = request.getParameter("password").trim();
 		String fullname = request.getParameter("fullname").trim();

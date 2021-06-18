@@ -146,7 +146,7 @@
 
     <div class="login-form">
     
-    <form action="${pageContext.request.contextPath}/login">
+    <form action="${pageContext.request.contextPath}/login" method="post">
         <h3>Login</h3>
             
             <div class="form-container">

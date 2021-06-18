@@ -21,7 +21,6 @@ public class SortTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
 	FilterTodo filterTodo=null;
-    HttpSession session = null;
     
        
     /**
@@ -37,7 +36,7 @@ public class SortTodo extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		session = request.getSession(true);
+		
 		
 		sortTodo(request, response);
 	}
@@ -50,6 +49,9 @@ public class SortTodo extends HttpServlet {
 	}
 	private void sortTodo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+	    HttpSession session = request.getSession(false);
+		
 		// Set response content type
         response.setContentType("text/html");
  

@@ -25,7 +25,6 @@ import model.User;
 public class ListTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
-    HttpSession session = null;
 	
     public ListTodo() {
         super();
@@ -34,7 +33,7 @@ public class ListTodo extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		session = request.getSession(true);
+		
 		
 		listTodo(request, response);
 	}
@@ -46,7 +45,9 @@ public class ListTodo extends HttpServlet {
 	
 	private void listTodo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
+	    HttpSession session = request.getSession(true);
+	    
 		User user = (User) session.getAttribute("user");
 		String now= LocalDate.now().toString();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");

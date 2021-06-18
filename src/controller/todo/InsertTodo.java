@@ -25,7 +25,6 @@ public class InsertTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TodoDao todoDao;
 	private TagDao tagDao;
-	HttpSession session = null;
 	
     public InsertTodo() {
         super();
@@ -34,7 +33,7 @@ public class InsertTodo extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(true);
+		
 		try {
 			insertTodo(request, response);
 		} catch (SQLException e) {
@@ -54,7 +53,8 @@ public class InsertTodo extends HttpServlet {
 	
 	private void insertTodo(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException, ParseException {
 		
-		
+
+		HttpSession session = request.getSession(true);
 		String from = request.getParameter("from");
 		
 		String title = request.getParameter("title");

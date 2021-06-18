@@ -17,7 +17,6 @@ import model.User;
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     UserDao userDao = null;
-    HttpSession session = null;
     
     public Login() {
         super();
@@ -25,8 +24,7 @@ public class Login extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(true);
-		
+
 		try {
 			login(request, response);
 		} catch (Exception e) {
@@ -70,6 +68,7 @@ public class Login extends HttpServlet {
 			if (user != null) {
 				if (user.getPassword().equals(password))
 				{
+					HttpSession session = request.getSession(false);
 					session.setAttribute("user", user);
 					
 					/*

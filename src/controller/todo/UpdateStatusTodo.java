@@ -27,7 +27,6 @@ public class UpdateStatusTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TodoDao todoDao;
 	private TagDao tagDao;
-	HttpSession session = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,7 +43,6 @@ public class UpdateStatusTodo extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		session = request.getSession(true);
 		try {
 			updateStatusTodo(request, response);
 		} catch (SQLException e) {
@@ -67,7 +65,8 @@ public class UpdateStatusTodo extends HttpServlet {
 	}
 	private void updateStatusTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
+
+		HttpSession session = request.getSession(false);
 		String from = request.getParameter("from").trim();
 		
 		int id = Integer.parseInt(request.getParameter("id"));

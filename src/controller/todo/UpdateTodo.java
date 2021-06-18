@@ -25,7 +25,6 @@ public class UpdateTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;  
 	private TodoDao todoDao;
 	private TagDao tagDao;
-	HttpSession session = null;
 	
     public UpdateTodo() {
         super();
@@ -35,7 +34,7 @@ public class UpdateTodo extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(true);
+		
 		try {
 			updateTodo(request, response);
 		} catch (SQLException e) {
@@ -55,7 +54,8 @@ public class UpdateTodo extends HttpServlet {
 	
 	private void updateTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
+
+		HttpSession session = request.getSession(false);
 		String from = request.getParameter("from");
 		
 		int id = Integer.parseInt(request.getParameter("id"));

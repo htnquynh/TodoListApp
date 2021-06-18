@@ -17,7 +17,6 @@ import model.Tag;
 public class EditTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	TagDao tagDao = null;
-    HttpSession session = null;
     
     public EditTag() {
         super();

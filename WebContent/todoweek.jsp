@@ -206,7 +206,7 @@
                 <!-- <div class="mymodal" id="addTodoModal"> -->
                     
                         <div class="mymodal-content">
-                        <form action="${pageContext.request.contextPath}/insertTodo" method="GET" >
+                        <form action="${pageContext.request.contextPath}/insertTodo" method="post" >
                             <div class="mymodal-header">
                                 <h3>Create new todo</h3>
                                 <a class="btn-close-mymodal" id="btn-close-addTodoModal">
@@ -362,7 +362,7 @@
 					<div class="mymodal" id="editTodoModal">
 			</c:if>
 			<div class="mymodal-content">
-                        <form action="${pageContext.request.contextPath}/updateTodo" method="GET" >
+                        <form action="${pageContext.request.contextPath}/updateTodo" method="post" >
                             <div class="mymodal-header">
                                 <h3>Update todo</h3>
                                 <a class="btn-close-mymodal" id="btn-close-editTodoModal">

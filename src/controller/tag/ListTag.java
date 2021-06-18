@@ -19,7 +19,7 @@ import model.User;
 public class ListTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
-	HttpSession session = null;
+	
 
 	public ListTag() {
 		super();
@@ -28,7 +28,7 @@ public class ListTag extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		session = request.getSession(true);
+		
 		listTag(request, response);
 	}
 
@@ -39,7 +39,7 @@ public class ListTag extends HttpServlet {
 
 	private void listTag(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+		HttpSession session = request.getSession(false);
 		User user = (User) session.getAttribute("user");
 		
 		List<Tag> listTag = userDao.getTagsByUser(user.getId());

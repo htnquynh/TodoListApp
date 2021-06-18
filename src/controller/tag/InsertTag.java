@@ -20,7 +20,7 @@ public class InsertTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private TagDao tagDao;
-	HttpSession session = null;
+	
 	
 	
     public InsertTag() {
@@ -29,7 +29,7 @@ public class InsertTag extends HttpServlet {
     }
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(true);
+		
 		try {
 			insertTag(request, response);
 		} catch (SQLException e) {
@@ -49,7 +49,7 @@ public class InsertTag extends HttpServlet {
 	
 	public void insertTag(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
+		HttpSession session = request.getSession(false);
 		String from = request.getParameter("from");
 		
 		String tagname = request.getParameter("tagname");

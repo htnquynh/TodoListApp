@@ -27,14 +27,12 @@ import model.User;
 public class ListTodoThisWeek extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
-    HttpSession session = null;
     public ListTodoThisWeek() {
         super();
         userDao = new UserDao();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(true);
 		
 		listTodoThisWeek(request, response);
 	}
@@ -45,7 +43,9 @@ public class ListTodoThisWeek extends HttpServlet {
 	}
 	private void listTodoThisWeek(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
+	    HttpSession session = request.getSession(true);
+	    
 		User user = (User) session.getAttribute("user");
 		String now= LocalDate.now().toString();
 		String[] parts = now.split("-");

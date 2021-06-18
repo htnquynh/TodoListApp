@@ -29,7 +29,6 @@ import model.User;
 public class FilterTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
-    HttpSession session = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,7 +43,7 @@ public class FilterTodo extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		session = request.getSession(true);
+		
 		
 		filterTodo(request, response);
 	}
@@ -57,7 +56,10 @@ public class FilterTodo extends HttpServlet {
 	}
 	private void filterTodo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("-------------------------đã vào filter");
+		
+
+	    HttpSession session = request.getSession(false);
+		System.out.println("-------------------------Ä‘Ã£ vÃ o filter");
 		int tagidFilter;
 		try {
 			tagidFilter = Integer.parseInt(request.getParameter("tagidFilter"));
@@ -71,18 +73,18 @@ public class FilterTodo extends HttpServlet {
 		String datefilter = request.getParameter("datefilter");
 		String week= request.getParameter("week");
 		String month= request.getParameter("month");
-		System.out.println(datefilter+ " ngày chọn khi xóa");
-		System.out.println(week+ " tuần chọn khi xóa");
-		System.out.println(month+ " tháng chọn khi xóa");
+		System.out.println(datefilter+ " ngÃ y chá»�n khi xÃ³a");
+		System.out.println(week+ " tuáº§n chá»�n khi xÃ³a");
+		System.out.println(month+ " thÃ¡ng chá»�n khi xÃ³a");
 		if(week==null||week.equals("null"))
 			week="";
 		if(datefilter==null||datefilter.equals("null"))
 			datefilter="";
 		if(month==null||month.equals("null"))
 			month="";
-		System.out.println(datefilter+ " ngày chọn khi xóa");
-		System.out.println(week+ " tuần chọn khi xóa");
-		System.out.println(month+ " tháng chọn khi xóa");
+		System.out.println(datefilter+ " ngÃ y chá»�n khi xÃ³a");
+		System.out.println(week+ " tuáº§n chá»�n khi xÃ³a");
+		System.out.println(month+ " thÃ¡ng chá»�n khi xÃ³a");
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String sort=request.getParameter("sort");
 		User user = (User) session.getAttribute("user");
@@ -97,7 +99,7 @@ public class FilterTodo extends HttpServlet {
 		}
 		else
 		{*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//lọc theo state của todo
+			//lá»�c theo state cá»§a todo
 			if(stateFilter.equals("null")==false)
 			{
 				for(int i=0; i< listTodo.size();i++) {
@@ -108,7 +110,7 @@ public class FilterTodo extends HttpServlet {
 					
 				}
 			}
-			//lọc theo prio
+			//lá»�c theo prio
 			if(prioFilter.equals("null")==false)
 			{
 				if (result.size() > 0)
@@ -131,7 +133,7 @@ public class FilterTodo extends HttpServlet {
 					}
 				}
 			}
-			//lọc theo tag
+			//lá»�c theo tag
 			if(tagidFilter!=-1)
 			{
 				if (result.size() > 0)
@@ -156,7 +158,7 @@ public class FilterTodo extends HttpServlet {
 					}
 				}
 			}
-			//LỌC THEO NGÀY
+			//Lá»ŒC THEO NGÃ€Y
 			if(type.equals("date"))
 			{
 				if(datefilter.equals("")==false)
@@ -190,7 +192,7 @@ public class FilterTodo extends HttpServlet {
 					{
 					}
 				}
-				else//ngày rỗng thì lọc theo ngày hôm nay
+				else//ngÃ y rá»—ng thÃ¬ lá»�c theo ngÃ y hÃ´m nay
 				{
 					String now= LocalDate.now().toString();
 					try {
@@ -221,12 +223,12 @@ public class FilterTodo extends HttpServlet {
 					}
 				}
 			}
-			//lọc theo tuần
+			//lá»�c theo tuáº§n
 			else if(type.equals("week"))
 			{
 				if(week.equals("")==false)
 				{
-					//Tách tuần và năm ra
+					//TÃ¡ch tuáº§n vÃ  nÄƒm ra
 					String[] parts = week.split("-W");
 					String part1 = parts[0]; 
 					String part2 = parts[1]; 
@@ -307,12 +309,12 @@ public class FilterTodo extends HttpServlet {
 					}
 				}
 			}
-			//lọc theo tháng
+			//lá»�c theo thÃ¡ng
 			else if(type.equals("month"))
 			{
 				if(month.equals("")==false)
 				{
-					//Tách tháng và năm
+					//TÃ¡ch thÃ¡ng vÃ  nÄƒm
 					String[] parts = month.split("-");
 					String part1 = parts[0]; 
 					String part2 = parts[1]; 
@@ -325,10 +327,10 @@ public class FilterTodo extends HttpServlet {
 						calendar.set(Calendar.YEAR, year);
 						// Now get the first day of week.
 						Date datestart = calendar.getTime();
-						//Kiểm tra tháng để tìm ngày cuối tháng
+						//Kiá»ƒm tra thÃ¡ng Ä‘á»ƒ tÃ¬m ngÃ y cuá»‘i thÃ¡ng
 						if (monthh==2)
 						{
-							if((year%400==0||(year%4==0&&year%100!=0)))//năm nhuận
+							if((year%400==0||(year%4==0&&year%100!=0)))//nÄƒm nhuáº­n
 							{
 								calendar.add(Calendar.DAY_OF_MONTH,28);
 							}
@@ -382,10 +384,10 @@ public class FilterTodo extends HttpServlet {
 					calendar.set(Calendar.YEAR,Integer.parseInt(part0));
 					// Now get the first day of week.
 					Date datestart = calendar.getTime();
-					//Kiểm tra tháng để tìm ngày cuối tháng
+					//Kiá»ƒm tra thÃ¡ng Ä‘á»ƒ tÃ¬m ngÃ y cuá»‘i thÃ¡ng
 					if (Integer.parseInt(part1)==2)
 						{
-							if((Integer.parseInt(part0)%400==0||(Integer.parseInt(part0)%4==0&&Integer.parseInt(part0)%100!=0)))//năm nhuận
+							if((Integer.parseInt(part0)%400==0||(Integer.parseInt(part0)%4==0&&Integer.parseInt(part0)%100!=0)))//nÄƒm nhuáº­n
 								calendar.add(Calendar.DAY_OF_MONTH,28);
 							else
 								calendar.add(Calendar.DAY_OF_MONTH,27);
@@ -428,17 +430,17 @@ public class FilterTodo extends HttpServlet {
 		/////////////////////////////////Sort/////////////////////////////
 		try {
 			if(sort.equals("Sort")) {
-				//tạo mảng chứa các todo có prio High chưa thực hiện xong
+				//táº¡o máº£ng chá»©a cÃ¡c todo cÃ³ prio High chÆ°a thá»±c hiá»‡n xong
 				List<Todo> high=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Medium chưa thực hiện xong
+				//táº¡o máº£ng chá»©a cÃ¡c todo cÃ³ prio Medium chÆ°a thá»±c hiá»‡n xong
 				List<Todo> medium=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Low chưa thực hiện xong
+				//táº¡o máº£ng chá»©a cÃ¡c todo cÃ³ prio Low chÆ°a thá»±c hiá»‡n xong
 				List<Todo> low=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Hight thực hiện xong
+				//táº¡o máº£ng chá»©a cÃ¡c todo cÃ³ prio Hight thá»±c hiá»‡n xong
 				List<Todo> highDone=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Medium chưa thực hiện xong
+				//táº¡o máº£ng chá»©a cÃ¡c todo cÃ³ prio Medium chÆ°a thá»±c hiá»‡n xong
 				List<Todo> mediumDone=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Low chưa thực hiện xong
+				//táº¡o máº£ng chá»©a cÃ¡c todo cÃ³ prio Low chÆ°a thá»±c hiá»‡n xong
 				List<Todo> lowDone=new ArrayList<Todo>();
 				for(int i=0; i< result.size();i++) {
 					if(result.get(i).getPriority().equals("High")) {
@@ -508,10 +510,10 @@ public class FilterTodo extends HttpServlet {
 				request.setAttribute("listTodo", result);
 				request.setAttribute("listTag", listTag);
 			}
-			System.out.print("độ dài chuỗi trả về sau khi sort "+result.size());
+			System.out.print("Ä‘á»™ dÃ i chuá»—i tráº£ vá»� sau khi sort "+result.size());
 		}
 		catch(Exception e) {
-			System.out.print("độ dài chuỗi trả về "+result.size());
+			System.out.print("Ä‘á»™ dÃ i chuá»—i tráº£ vá»� "+result.size());
 			request.setAttribute("listTodo", result);
 			request.setAttribute("listTag", listTag);
 		}

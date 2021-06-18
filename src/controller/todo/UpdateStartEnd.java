@@ -25,7 +25,6 @@ public class UpdateStartEnd extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TodoDao todoDao;
 	private TagDao tagDao;
-	HttpSession session = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -42,7 +41,7 @@ public class UpdateStartEnd extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		session = request.getSession(true);
+		
 		try {
 			updateEndTimeTodo(request, response);
 		} catch (SQLException e) {
@@ -66,6 +65,8 @@ public class UpdateStartEnd extends HttpServlet {
 	private void updateEndTimeTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
 		
+
+		HttpSession session = request.getSession(false);
 		String from = request.getParameter("from").trim();
 		
 		int id = Integer.parseInt(request.getParameter("id"));

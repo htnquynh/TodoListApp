@@ -40,7 +40,7 @@ public class Statistic extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
 
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         User user = (User)session.getAttribute("user");
         System.out.println(user.getFullname());
 

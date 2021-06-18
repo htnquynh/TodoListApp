@@ -132,7 +132,7 @@
 %>
     <%-- <a id="btn-open-signupModal" class="btn-open-mymodal">Sign Up</a> --%>
     <div class="login-form">
-        	<form action="${pageContext.request.contextPath}/signup">
+        	<form action="${pageContext.request.contextPath}/signup" method="post">
                 <h3>Sign Up</h3>
                 <div class="form-container">
                     

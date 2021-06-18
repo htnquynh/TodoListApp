@@ -83,7 +83,6 @@ public class UserDao {
 			}
 			
 			transaction.commit();
-			System.out.println("Tran da commit");
 			
 		} catch (Exception e) {
 			if (transaction != null) {
@@ -92,7 +91,6 @@ public class UserDao {
 			e.printStackTrace();
 		} finally {
 			session.close();
-			System.out.println("Session da close");
 		}
 		
 		return null;

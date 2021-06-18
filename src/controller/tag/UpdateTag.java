@@ -19,7 +19,7 @@ import model.User;
 public class UpdateTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TagDao tagDao;
-	HttpSession session = null;
+	
 	
     public UpdateTag() {
         super();
@@ -27,7 +27,7 @@ public class UpdateTag extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(true);
+		
 		try {
 			updateTag(request, response);
 		} catch (SQLException e) {
@@ -47,7 +47,7 @@ public class UpdateTag extends HttpServlet {
 
 	private void updateTag(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
+		HttpSession session = request.getSession(false);
 		String from = request.getParameter("from").trim();
 		
 		int id = Integer.parseInt(request.getParameter("id"));

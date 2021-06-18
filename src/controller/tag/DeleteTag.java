@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import dao.TagDao;
 
@@ -16,7 +15,7 @@ import dao.TagDao;
 public class DeleteTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	TagDao tagDao = null;
-    HttpSession session = null;
+    
        
     public DeleteTag() {
         super();
