@@ -12,11 +12,12 @@ import javax.servlet.http.HttpSession;
 
 import dao.TagDao;
 import model.Tag;
+import model.User;
 
 @WebServlet("/editTag")
 public class EditTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	TagDao tagDao = null;
+	private TagDao tagDao = null;
     HttpSession session = null;
     
     public EditTag() {
@@ -37,29 +38,39 @@ public class EditTag extends HttpServlet {
 	private void showEditTagForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		String from = request.getParameter("from");
-		
+		String from = request.getParameter("from");		
 		
 		int id = Integer.parseInt(request.getParameter("id"));
 		
 		Tag existingTag = tagDao.getTag(id);
+		session = request.getSession(true);
+		User user = (User) session.getAttribute("user");
+
+		if (existingTag.getUser().getId() == user.getId())
+		{
+			request.setAttribute("existingTag", existingTag);
+			request.setAttribute("openFormEditTag", "open");
 		
-		request.setAttribute("existingTag", existingTag);
-		request.setAttribute("openFormEditTag", "open");
-		
-		RequestDispatcher dispatcher;
-		
-		if (from.equals("dashboard")) {
-			dispatcher = request.getRequestDispatcher("dashboard.jsp");
-		} else if (from.equals("tododay")) {
-			dispatcher = request.getRequestDispatcher("tododay.jsp");
-		} else if (from.equals("todoweek")) {
-			dispatcher = request.getRequestDispatcher("todoweek.jsp");
-		} else {
-			dispatcher = request.getRequestDispatcher("todomonth.jsp");
+			RequestDispatcher dispatcher;
+			
+			if (from.equals("dashboard")) {
+				dispatcher = request.getRequestDispatcher("dashboard.jsp");
+			} else if (from.equals("tododay")) {
+				dispatcher = request.getRequestDispatcher("tododay.jsp");
+			} else if (from.equals("todoweek")) {
+				dispatcher = request.getRequestDispatcher("todoweek.jsp");
+			} else {
+				dispatcher = request.getRequestDispatcher("todomonth.jsp");
+			}
+			
+			dispatcher.forward(request, response);
 		}
-		
-		dispatcher.forward(request, response);
+		else
+		{
+			session.invalidate();
+			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+			dispatcher.forward(request, response);
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

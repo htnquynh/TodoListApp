@@ -9,15 +9,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.TodoDao;
 import model.Todo;
+import model.User;
 
 @WebServlet("/editTodo")
 public class EditTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TodoDao todoDao;
-	
+	HttpSession session = null;
 	
     public EditTodo() {
         super();
@@ -26,6 +28,8 @@ public class EditTodo extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession(true);
+
 		try {
 			showEditTodoForm(request, response);
 		} catch (SQLException e) {
@@ -55,7 +59,9 @@ public class EditTodo extends HttpServlet {
 		/* String type = request.getParameter("type"); */
 		
 		Todo existingTodo = todoDao.getTodo(id);
-		request.setAttribute("existingTodo", existingTodo);
+		User user = (User) session.getAttribute("user");
+		if (existingTodo.getUser().getId()==user.getId())
+		{request.setAttribute("existingTodo", existingTodo);
 		request.setAttribute("openFormEditTodo", "open");
 		
 		RequestDispatcher dispatcher;
@@ -71,8 +77,12 @@ public class EditTodo extends HttpServlet {
 		}
 		
 		dispatcher.forward(request, response);
-		
-		
+		}
+		else
+		{
+			session.invalidate();
+			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+			dispatcher.forward(request, response);
+		}
 	}
-
 }

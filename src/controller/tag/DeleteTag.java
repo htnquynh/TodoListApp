@@ -3,6 +3,7 @@ package controller.tag;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.TagDao;
+import model.Tag;
+import model.User;
 
 @WebServlet("/deleteTag")
 public class DeleteTag extends HttpServlet {
@@ -24,6 +27,8 @@ public class DeleteTag extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession(true);
+
 		try {
 			deleteTag(request, response);
 		} catch (SQLException e) {
@@ -48,17 +53,26 @@ public class DeleteTag extends HttpServlet {
 		System.out.println(from);
 		
 		int id = Integer.parseInt(request.getParameter("id"));
-		
-		tagDao.deleteTag(id);
-		
-		if (from.equals("dashboard")) {
-			response.sendRedirect("listDashboard");
-		} else if (from.equals("tododay")) {
-			response.sendRedirect("listTodo");
-		} else if (from.equals("todoweek")) {
-			response.sendRedirect("listTodoThisWeek");
-		} else {
-			response.sendRedirect("listTodoThisMonth");
+		User user = (User) session.getAttribute("user");
+		Tag tag = tagDao.getTag(id);
+		if (tag.getUser().getId() == user.getId())
+		{
+			tagDao.deleteTag(id);
+			if (from.equals("dashboard")) {
+				response.sendRedirect("listDashboard");
+			} else if (from.equals("tododay")) {
+				response.sendRedirect("listTodo");
+			} else if (from.equals("todoweek")) {
+				response.sendRedirect("listTodoThisWeek");
+			} else {
+				response.sendRedirect("listTodoThisMonth");
+			}
+		}
+		else
+		{
+			session.invalidate();
+			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+			dispatcher.forward(request, response);
 		}
 	}
 

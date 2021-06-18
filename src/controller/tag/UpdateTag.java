@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +19,7 @@ import model.User;
 @WebServlet("/updateTag")
 public class UpdateTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private TagDao tagDao;
+	private TagDao tagDao = null;
 	HttpSession session = null;
 	
     public UpdateTag() {
@@ -55,19 +56,26 @@ public class UpdateTag extends HttpServlet {
 		String color = request.getParameter("color");
 		
 		User user = (User) session.getAttribute("user");
-		Tag tag = new Tag(id, tagname, color, user);
-		tagDao.updateTag(tag);
-		
-		
-		if (from.equals("dashboard")) {
-			response.sendRedirect("listDashboard");
-		} else if (from.equals("tododay")) {
-			response.sendRedirect("listTodo");
-		} else if (from.equals("todoweek")) {
-			response.sendRedirect("listTodoThisWeek");
-		} else {
-			response.sendRedirect("listTodoThisMonth");
+		Tag tag = tagDao.getTag(id);
+		if (tag.getUser().getId() == user.getId())
+		{
+			tag = new Tag(id, tagname, color, user);
+			tagDao.updateTag(tag);
+			if (from.equals("dashboard")) {
+				response.sendRedirect("listDashboard");
+			} else if (from.equals("tododay")) {
+				response.sendRedirect("listTodo");
+			} else if (from.equals("todoweek")) {
+				response.sendRedirect("listTodoThisWeek");
+			} else {
+				response.sendRedirect("listTodoThisMonth");
+			}
 		}
-		
+		else
+		{
+			session.invalidate();
+			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+			dispatcher.forward(request, response);
+		}
 	}
 }

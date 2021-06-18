@@ -66,45 +66,16 @@ public class UpdateTodo extends HttpServlet {
 		Integer tagid = Integer.parseInt(request.getParameter("tagid").trim());
 
 		Tag tag = tagDao.getTag(tagid);
+		Todo existingTodo = todoDao.getTodo(id);
 		
 		String date_str = request.getParameter("date");
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = df.parse(date_str);
-		
-		Todo existingTodo = new Todo(id, title, priority, tag, date);
-		
-		
+				
 		if (title.equals("")) {
 			request.setAttribute("titleError", "* You must enter title");
-		}
-		
-		if (priority.equals("")) {
-			request.setAttribute("priorityError", "* You must enter priority");
-		}
-		
-		if (!title.equals("") && !priority.equals("")) {
-			
-			
-			User user = (User) session.getAttribute("user");
-			
-			existingTodo.setUser(user);
-			
-			todoDao.updateTodo(existingTodo);
-			
-			
-			if (from.equals("dashboard")) {
-				response.sendRedirect("listDashboard");
-			} else if (from.equals("tododay")) {
-				response.sendRedirect("listTodo");
-			} else if (from.equals("todoweek")) {
-				response.sendRedirect("listTodoThisWeek");
-			} else {
-				response.sendRedirect("listTodoThisMonth");
-			}
-			
-			
-		} else {
 			request.setAttribute("existingTodo", existingTodo);
+			
 			request.setAttribute("openFormEditTodo", "open");
 			
 			RequestDispatcher dispatcher;
@@ -121,6 +92,33 @@ public class UpdateTodo extends HttpServlet {
 			
 			dispatcher.forward(request, response);
 		}
+		else
+		{	
+			User user = (User) session.getAttribute("user");
+			if (tag.getUser().getId()==user.getId()&&existingTodo.getUser().getId()==user.getId())
+			{ 
+				existingTodo = new Todo(id, title, priority, tag, date);
+				existingTodo.setUser(user);
+				todoDao.updateTodo(existingTodo);
+				if (from.equals("dashboard")) {
+					response.sendRedirect("listDashboard");
+				} else if (from.equals("tododay")) {
+					response.sendRedirect("listTodo");
+				} else if (from.equals("todoweek")) {
+					response.sendRedirect("listTodoThisWeek");
+				} else {
+					response.sendRedirect("listTodoThisMonth");
+				}
+			}
+			else
+			{
+
+				session.invalidate();
+				RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		
 	}
 
 }
