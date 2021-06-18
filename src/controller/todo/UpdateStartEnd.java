@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.RequestDispatcher;
 
 import dao.TagDao;
 import dao.TodoDao;
 import model.Todo;
+import model.User;
 
 /**
  * Servlet implementation class UpdateEndTime
@@ -66,31 +68,43 @@ public class UpdateStartEnd extends HttpServlet {
 	private void updateEndTimeTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
 		
-		String from = request.getParameter("from").trim();
-		
-		int id = Integer.parseInt(request.getParameter("id"));
-		String startTime=request.getParameter("start");
-		
-		System.out.println(startTime);
-		Todo td = todoDao.getTodo(id);
-        System.out.println(td.toString());
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-        Date start=formatter.parse(startTime);
-        Date date = new Date();
-        td.setStart(start);
-        td.setEnd(date);
-        System.out.println(td.toString());
-        todoDao.updateTodo(td);
-        
-        if (from.equals("dashboard")) {
-			response.sendRedirect("listDashboard");
-		} else if (from.equals("tododay")) {
-			response.sendRedirect("listTodo");
-		} else if (from.equals("todoweek")) {
-			response.sendRedirect("listTodoThisWeek");
-		} else {
-			response.sendRedirect("listTodoThisMonth");
+		User user = (User) session.getAttribute("user");
+		if(user!=null) {
+
+			String from = request.getParameter("from").trim();
+			
+			int id = Integer.parseInt(request.getParameter("id"));
+			String startTime=request.getParameter("start");
+			
+			System.out.println(startTime);
+			Todo td = todoDao.getTodo(id);
+	        System.out.println(td.toString());
+	        
+	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+	        Date start=formatter.parse(startTime);
+	        Date date = new Date();
+	        td.setStart(start);
+	        td.setEnd(date);
+	        System.out.println(td.toString());
+	        todoDao.updateTodo(td);
+	        
+	        if (from.equals("dashboard")) {
+				response.sendRedirect("listDashboard");
+			} else if (from.equals("tododay")) {
+				response.sendRedirect("listTodo");
+			} else if (from.equals("todoweek")) {
+				response.sendRedirect("listTodoThisWeek");
+			} else {
+				response.sendRedirect("listTodoThisMonth");
+			}
+		}else {
+			System.out.println("Nguoi dung null");
+			
+			RequestDispatcher dispatcher;
+			
+			dispatcher = request.getRequestDispatcher("index.jsp");
+			
+			dispatcher.forward(request, response);
 		}
 			
 	}

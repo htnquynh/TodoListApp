@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +11,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import dao.TagDao;
 import dao.UserDao;
@@ -44,13 +47,19 @@ public class Signup extends HttpServlet {
 	private void signup(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String url="";
 		
-		String email = request.getParameter("email");
-		String password =request.getParameter("password");
-		String fullname = request.getParameter("fullname");
+		String email = StringEscapeUtils.escapeHtml4(request.getParameter("email"));
+		request.setAttribute("email", email);
+		String password =StringEscapeUtils.escapeHtml4(request.getParameter("password"));
+		request.setAttribute("password", password);
+		String fullname = StringEscapeUtils.escapeHtml4(request.getParameter("fullname"));
+		request.setAttribute("fullname", fullname);
 		
-		boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
+		boolean gender = Boolean.parseBoolean(StringEscapeUtils.escapeHtml4(request.getParameter("gender")));
+		System.out.println("BBBB: " + gender);
+		request.setAttribute("gender", gender);
 		
-		String birthdate_str = request.getParameter("birthdate");
+		String birthdate_str = StringEscapeUtils.escapeHtml4(request.getParameter("birthdate"));
+		request.setAttribute("birthdate_str", birthdate_str);
 		
 		
 		if (email.equals("") == true)
@@ -73,30 +82,35 @@ public class Signup extends HttpServlet {
 		
 				
 		if (!email.equals("") && !fullname.equals("") && !password.equals("")) {
-			try {
-				User newUser = new User(email, password, fullname, gender);
-				
-				if (!birthdate_str.equals("")) {
-					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-					Date birthdate = df.parse(birthdate_str);
-					newUser.setBirthdate(birthdate);
+			Pattern pattern=Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+			if(pattern.matcher(password).matches()) {
+				try {
+					User newUser = new User(email, password, fullname, gender);
+					
+					if (!birthdate_str.equals("")) {
+						SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+						Date birthdate = df.parse(birthdate_str);
+						newUser.setBirthdate(birthdate);
+					}
+					
+					if(email.length()<256&&password.length()<256&&fullname.length()<256) {
+						userDao.saveUser(newUser);
+					}else {
+						System.out.println("Khong them user nay vi so luong ki tu lon hon gioi han cho phep!!!");
+					}
+					Tag defaultTag = new Tag(0, "Other", "#cccccc", newUser);
+					tagDao.saveTag(defaultTag);
+					
+					url="/login.jsp";
+					
+						
+				} catch (Exception e) {
+					url="/signup.jsp";
+					request.setAttribute("emailError", "* Email registered");	
 				}
-				
-				//url="/signup-confirm.jsp";
-				//request.getSession().setAttribute( "newuser", newUser);
-                //String code = MailAPI.Send(email);
-                //request.getSession().setAttribute("code",code);
-					
-				userDao.saveUser(newUser);
-				Tag defaultTag = new Tag(0, "Other", "#cccccc", newUser);
-				tagDao.saveTag(defaultTag);
-				
-				url="/login.jsp";
-				
-					
-			} catch (Exception e) {
+			}else {
 				url="/signup.jsp";
-				request.setAttribute("emailError", "* Email registered");	
+				request.setAttribute("passwordError", "Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters!");
 			}
 		}
 			

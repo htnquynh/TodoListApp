@@ -56,68 +56,87 @@ public class UpdateTodo extends HttpServlet {
 	private void updateTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
 		
-		String from = request.getParameter("from");
-		
-		int id = Integer.parseInt(request.getParameter("id"));
-		
-		String title = request.getParameter("title").trim();
-		String priority = request.getParameter("priority").trim();
-		
-		Integer tagid = Integer.parseInt(request.getParameter("tagid").trim());
+		User user = (User) session.getAttribute("user");
+		if(user!=null) {
+			if(request.getParameter("from").length()<10&&request.getParameter("title").length()<256&&request.getParameter("priority").length()<7) {
+				String from = request.getParameter("from");
+				try {
+					int id = Integer.parseInt(request.getParameter("id"));
+					
+					String title = request.getParameter("title").trim();
+					String priority = request.getParameter("priority").trim();
+					
+					Integer tagid = Integer.parseInt(request.getParameter("tagid").trim());
 
-		Tag tag = tagDao.getTag(tagid);
-		
-		String date_str = request.getParameter("date");
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = df.parse(date_str);
-		
-		Todo existingTodo = new Todo(id, title, priority, tag, date);
-		
-		
-		if (title.equals("")) {
-			request.setAttribute("titleError", "* You must enter title");
-		}
-		
-		if (priority.equals("")) {
-			request.setAttribute("priorityError", "* You must enter priority");
-		}
-		
-		if (!title.equals("") && !priority.equals("")) {
-			
-			
-			User user = (User) session.getAttribute("user");
-			
-			existingTodo.setUser(user);
-			
-			todoDao.updateTodo(existingTodo);
-			
-			
-			if (from.equals("dashboard")) {
-				response.sendRedirect("listDashboard");
-			} else if (from.equals("tododay")) {
-				response.sendRedirect("listTodo");
-			} else if (from.equals("todoweek")) {
-				response.sendRedirect("listTodoThisWeek");
-			} else {
-				response.sendRedirect("listTodoThisMonth");
+					Tag tag = tagDao.getTag(tagid);
+					
+					String date_str = request.getParameter("date");
+					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					Date date = df.parse(date_str);
+					
+					Todo existingTodo = new Todo(id, title, priority, tag, date);
+					
+					
+					if (title.equals("")) {
+						request.setAttribute("titleError", "* You must enter title");
+					}
+					
+					if (priority.equals("")) {
+						request.setAttribute("priorityError", "* You must enter priority");
+					}
+					
+					if (!title.equals("") && !priority.equals("")) {
+						
+						
+						existingTodo.setUser(user);
+						
+						todoDao.updateTodo(existingTodo);
+						
+						
+						if (from.equals("dashboard")) {
+							response.sendRedirect("listDashboard");
+						} else if (from.equals("tododay")) {
+							response.sendRedirect("listTodo");
+						} else if (from.equals("todoweek")) {
+							response.sendRedirect("listTodoThisWeek");
+						} else {
+							response.sendRedirect("listTodoThisMonth");
+						}
+						
+						
+					} else {
+						request.setAttribute("existingTodo", existingTodo);
+						request.setAttribute("openFormEditTodo", "open");
+						
+						RequestDispatcher dispatcher;
+						
+						if (from.equals("dashboard")) {
+							dispatcher = request.getRequestDispatcher("dashboard.jsp");
+						} else if (from.equals("tododay")) {
+							dispatcher = request.getRequestDispatcher("tododay.jsp");
+						} else if (from.equals("todoweek")) {
+							dispatcher = request.getRequestDispatcher("todoweek.jsp");
+						} else {
+							dispatcher = request.getRequestDispatcher("todomonth.jsp");
+						}
+						
+						dispatcher.forward(request, response);
+					}	
+				}catch (Exception e) {
+					RequestDispatcher dispatcher;
+					
+					dispatcher = request.getRequestDispatcher("error.jsp");
+					
+					dispatcher.forward(request, response);
+				}
+				
 			}
-			
-			
-		} else {
-			request.setAttribute("existingTodo", existingTodo);
-			request.setAttribute("openFormEditTodo", "open");
+		}else {
+			System.out.println("Nguoi dung null");
 			
 			RequestDispatcher dispatcher;
 			
-			if (from.equals("dashboard")) {
-				dispatcher = request.getRequestDispatcher("dashboard.jsp");
-			} else if (from.equals("tododay")) {
-				dispatcher = request.getRequestDispatcher("tododay.jsp");
-			} else if (from.equals("todoweek")) {
-				dispatcher = request.getRequestDispatcher("todoweek.jsp");
-			} else {
-				dispatcher = request.getRequestDispatcher("todomonth.jsp");
-			}
+			dispatcher = request.getRequestDispatcher("index.jsp");
 			
 			dispatcher.forward(request, response);
 		}

@@ -36,30 +36,44 @@ public class EditTag extends HttpServlet {
 	
 	private void showEditTagForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		String from = request.getParameter("from");
-		
-		
-		int id = Integer.parseInt(request.getParameter("id"));
-		
-		Tag existingTag = tagDao.getTag(id);
-		
-		request.setAttribute("existingTag", existingTag);
-		request.setAttribute("openFormEditTag", "open");
-		
-		RequestDispatcher dispatcher;
-		
-		if (from.equals("dashboard")) {
-			dispatcher = request.getRequestDispatcher("dashboard.jsp");
-		} else if (from.equals("tododay")) {
-			dispatcher = request.getRequestDispatcher("tododay.jsp");
-		} else if (from.equals("todoweek")) {
-			dispatcher = request.getRequestDispatcher("todoweek.jsp");
-		} else {
-			dispatcher = request.getRequestDispatcher("todomonth.jsp");
+		if(request.getParameter("from").length()<10) {
+			String from = request.getParameter("from");
+			
+			try {
+				int id = Integer.parseInt(request.getParameter("id"));
+				
+				Tag existingTag = tagDao.getTag(id);
+				
+				request.setAttribute("existingTag", existingTag);
+				request.setAttribute("openFormEditTag", "open");
+				
+				RequestDispatcher dispatcher;
+				
+				if (from.equals("dashboard")) {
+					dispatcher = request.getRequestDispatcher("dashboard.jsp");
+				} else if (from.equals("tododay")) {
+					dispatcher = request.getRequestDispatcher("tododay.jsp");
+				} else if (from.equals("todoweek")) {
+					dispatcher = request.getRequestDispatcher("todoweek.jsp");
+				} else {
+					dispatcher = request.getRequestDispatcher("todomonth.jsp");
+				}
+				
+				dispatcher.forward(request, response);		
+			}catch (Exception e) {
+				RequestDispatcher dispatcher;
+				
+				dispatcher = request.getRequestDispatcher("error.jsp");
+				
+				dispatcher.forward(request, response);
+			}
+		}else {
+			RequestDispatcher dispatcher;
+			
+			dispatcher = request.getRequestDispatcher("error.jsp");
+			
+			dispatcher.forward(request, response);
 		}
-		
-		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

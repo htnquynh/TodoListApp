@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.text.*;
+
 import dao.UserDao;
 import model.User;
 
@@ -53,11 +55,14 @@ public class Login extends HttpServlet {
 	
 	private void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String url = "";
-		String email = request.getParameter("email").trim();
+		String email  = StringEscapeUtils.escapeHtml4(request.getParameter("email").trim());
+		System.out.println("Da thay doi");
+		//String email = request.getParameter("email").trim();
 		System.out.println("Email: " + email);
-		String password = request.getParameter("password").trim();
+		request.setAttribute("email", email);
+		String password = StringEscapeUtils.escapeHtml4(request.getParameter("password").trim());
 		System.out.println("Password: " + password);
-
+		request.setAttribute("password", password);
 		if (email.equals("")== true)
 		{
 			request.setAttribute("emailError", "* You must enter email");
@@ -86,6 +91,7 @@ public class Login extends HttpServlet {
 				{
 					url="/login.jsp";
 					request.setAttribute("passwordError", "* Password incorrect");
+					
 				}
 				
 			} else {

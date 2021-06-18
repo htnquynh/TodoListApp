@@ -53,42 +53,51 @@ public class UpdateUser extends HttpServlet {
 	
 	private void updateUser(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
-		String email = request.getParameter("email").trim();
-		String password = request.getParameter("password").trim();
-		String fullname = request.getParameter("fullname").trim();
-		String gender = request.getParameter("gender");
-		
-		String birthdate_str = request.getParameter("birthdate");
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Date birthdate = df.parse(birthdate_str);
-		
-        Pattern emailPattern = Pattern.compile("\\w+@\\w+(.\\w+)*");
-        Matcher emailMatcher = emailPattern.matcher(email);
-        if (!emailMatcher.matches()) {
-        	request.setAttribute("email", email);
-            request.setAttribute("emailError", " is not an email address!");
-        } else {
-        	User user = (User) session.getAttribute("user");
-    		user.setEmail(email);
-    		user.setPassword(password);
-    		user.setFullname(fullname);
-    		
-    		
-    		
-    		if(gender.equals("male")) {
-    			user.setGender(false);	// false = 0 --> Male
-    		} else {
-    			user.setGender(true);	// true = 1 --> Female
-    		}
-    		
-    		user.setBirthdate(birthdate);
-    		userDao.updateUser(user);
-    		session.setAttribute("user", userDao.getUser(user.getId()));
-        }
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
-		dispatcher.forward(request, response);
+		User user = (User) session.getAttribute("user");
+		if(user!=null) {
+			String email = request.getParameter("email").trim();
+			String password = request.getParameter("password").trim();
+			String fullname = request.getParameter("fullname").trim();
+			String gender = request.getParameter("gender");
+			
+			String birthdate_str = request.getParameter("birthdate");
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date birthdate = df.parse(birthdate_str);
+			
+	        Pattern emailPattern = Pattern.compile("\\w+@\\w+(.\\w+)*");
+	        Matcher emailMatcher = emailPattern.matcher(email);
+	        if (!emailMatcher.matches()) {
+	        	request.setAttribute("email", email);
+	            request.setAttribute("emailError", " is not an email address!");
+	        } else {
+	    		user.setEmail(email);
+	    		user.setPassword(password);
+	    		user.setFullname(fullname);
+	    		
+	    		
+	    		
+	    		if(gender.equals("male")) {
+	    			user.setGender(false);	// false = 0 --> Male
+	    		} else {
+	    			user.setGender(true);	// true = 1 --> Female
+	    		}
+	    		
+	    		user.setBirthdate(birthdate);
+	    		userDao.updateUser(user);
+	    		session.setAttribute("user", userDao.getUser(user.getId()));
+	        }
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+			dispatcher.forward(request, response);
+		}else {
+			System.out.println("Nguoi dung null");
+			
+			RequestDispatcher dispatcher;
+			
+			dispatcher = request.getRequestDispatcher("index.jsp");
+			
+			dispatcher.forward(request, response);
+		}
 	}
 
 }

@@ -48,33 +48,43 @@ public class ListTodo extends HttpServlet {
 			throws ServletException, IOException {
 		
 		User user = (User) session.getAttribute("user");
-		String now= LocalDate.now().toString();
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		
-		List<Todo> listTodo = userDao.getTodosByUser(user.getId());
-		
-		List<Tag> listTag = userDao.getTagsByUser(user.getId());
-		List<Todo> result=new ArrayList<Todo>();
-		try {
-			Date today = df.parse(now);
-			for( int i=0; i< listTodo.size();i++) 
-			{
-				if (listTodo.get(i).getDate().compareTo(today)==0)
-				{
-					result.add(listTodo.get(i));
-				}
-			}
-		} catch(Exception e) {
+		if(user!=null) {
+			String now= LocalDate.now().toString();
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 			
-		}
-		
-		session.setAttribute("listTodo", result); 
-		session.setAttribute("listTag", listTag);
-		session.setAttribute("listTodoTotal", listTodo);
-		 
+			List<Todo> listTodo = userDao.getTodosByUser(user.getId());
+			
+			List<Tag> listTag = userDao.getTagsByUser(user.getId());
+			List<Todo> result=new ArrayList<Todo>();
+			try {
+				Date today = df.parse(now);
+				for( int i=0; i< listTodo.size();i++) 
+				{
+					if (listTodo.get(i).getDate().compareTo(today)==0)
+					{
+						result.add(listTodo.get(i));
+					}
+				}
+			} catch(Exception e) {
+				
+			}
+			
+			session.setAttribute("listTodo", result); 
+			session.setAttribute("listTag", listTag);
+			session.setAttribute("listTodoTotal", listTodo);
+			 
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("tododay.jsp");
-		dispatcher.forward(request, response);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("tododay.jsp");
+			dispatcher.forward(request, response);
+		}else {
+			System.out.println("Nguoi dung null");
+			
+			RequestDispatcher dispatcher;
+			
+			dispatcher = request.getRequestDispatcher("index.jsp");
+			
+			dispatcher.forward(request, response);
+		}
 	}
 
 }

@@ -124,15 +124,17 @@
 	if (emailError == null) emailError = "";
 	String passwordError = (String)request.getAttribute("passwordError");
 	if (passwordError == null) passwordError ="";
-	String email = request.getParameter("email");
+	String email = (String)request.getAttribute("email");
 	if (email == null) email = "";
-	String password = request.getParameter("password");
+	String password =(String)request.getAttribute("password");
+	System.out.println("Emailllllll: " + password);
+	if (password == null) password = "";
 %>
 
 	<div class="right-decor">
     	<h3>Welcome to Todo App</h3>
     	<p>Having a list of all your tasks will allow you to sit down and make a plan. One study showed that fifteen minutes spent planning could save an hour of execution time!</p>
-    	<a href="${pageContext.request.contextPath}/signup.jsp">
+    	<a href="${pageContext.request.contextPath}/signup.jsp">Sign Up
     	<svg xmlns="http://www.w3.org/2000/svg" 
     			enable-background="new 0 0 24 24" 
     			height="16px" viewBox="0 0 24 24" 
@@ -140,7 +142,6 @@
     		<rect fill="none" height="16" width="16"/>
     		<path d="M9,19l1.41-1.41L5.83,13H22V11H5.83l4.59-4.59L9,5l-7,7L9,19z"/>
     	</svg>
-    	Sign Up
 		</a>
     </div>
 

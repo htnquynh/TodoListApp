@@ -44,35 +44,43 @@ public class EditTodo extends HttpServlet {
 	
 	private void showEditTodoForm(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
-		
-		int id = Integer.parseInt(request.getParameter("id"));
-		
-		String from = request.getParameter("from").trim();
-		
-		System.out.println("From: ");
-		System.out.println(from);
-		
-		/* String type = request.getParameter("type"); */
-		
-		Todo existingTodo = todoDao.getTodo(id);
-		request.setAttribute("existingTodo", existingTodo);
-		request.setAttribute("openFormEditTodo", "open");
-		
 		RequestDispatcher dispatcher;
-		
-		if (from.equals("dashboard")) {
-			dispatcher = request.getRequestDispatcher("dashboard.jsp");
-		} else if (from.equals("tododay")) {
-			dispatcher = request.getRequestDispatcher("tododay.jsp");
-		} else if (from.equals("todoweek")) {
-			dispatcher = request.getRequestDispatcher("todoweek.jsp");
-		} else {
-			dispatcher = request.getRequestDispatcher("todomonth.jsp");
+		if(request.getParameter("from").length()<10) {
+			try {
+				int id = Integer.parseInt(request.getParameter("id"));
+				
+				String from = request.getParameter("from").trim();
+				
+				System.out.println("From: ");
+				System.out.println(from);
+				
+				/* String type = request.getParameter("type"); */
+				
+				Todo existingTodo = todoDao.getTodo(id);
+				request.setAttribute("existingTodo", existingTodo);
+				request.setAttribute("openFormEditTodo", "open");
+				
+				if (from.equals("dashboard")) {
+					dispatcher = request.getRequestDispatcher("dashboard.jsp");
+				} else if (from.equals("tododay")) {
+					dispatcher = request.getRequestDispatcher("tododay.jsp");
+				} else if (from.equals("todoweek")) {
+					dispatcher = request.getRequestDispatcher("todoweek.jsp");
+				} else {
+					dispatcher = request.getRequestDispatcher("todomonth.jsp");
+				}
+				
+				dispatcher.forward(request, response);
+			}catch (Exception e) {
+				dispatcher = request.getRequestDispatcher("error.jsp");
+				
+				dispatcher.forward(request, response);
+			}
+		}else {
+			dispatcher = request.getRequestDispatcher("error.jsp");
+			
+			dispatcher.forward(request, response);
 		}
-		
-		dispatcher.forward(request, response);
-		
-		
 	}
 
 }

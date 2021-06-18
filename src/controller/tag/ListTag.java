@@ -41,15 +41,25 @@ public class ListTag extends HttpServlet {
 			throws ServletException, IOException {
 		
 		User user = (User) session.getAttribute("user");
-		
-		List<Tag> listTag = userDao.getTagsByUser(user.getId());
-		
-		/* request.setAttribute("listTag", listTag); */
-		
-		session.setAttribute("listTag", listTag);
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("tags/index.jsp");
-		dispatcher.forward(request, response);
+		if(user!=null) {
+			List<Tag> listTag = userDao.getTagsByUser(user.getId());
+			
+			/* request.setAttribute("listTag", listTag); */
+			
+			session.setAttribute("listTag", listTag);
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("tags/index.jsp");
+			dispatcher.forward(request, response);
+		}else {
+			System.out.println("Nguoi dung null");
+			
+			RequestDispatcher dispatcher;
+			
+			dispatcher = request.getRequestDispatcher("index.jsp");
+			
+			dispatcher.forward(request, response);
+		}
+	
 	}
 
 }

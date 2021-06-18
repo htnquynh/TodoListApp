@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,26 +48,41 @@ public class UpdateTag extends HttpServlet {
 
 	private void updateTag(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
-		String from = request.getParameter("from").trim();
-		
-		int id = Integer.parseInt(request.getParameter("id"));
-		String tagname = request.getParameter("tagname");
-		String color = request.getParameter("color");
-		
 		User user = (User) session.getAttribute("user");
-		Tag tag = new Tag(id, tagname, color, user);
-		tagDao.updateTag(tag);
-		
-		
-		if (from.equals("dashboard")) {
-			response.sendRedirect("listDashboard");
-		} else if (from.equals("tododay")) {
-			response.sendRedirect("listTodo");
-		} else if (from.equals("todoweek")) {
-			response.sendRedirect("listTodoThisWeek");
-		} else {
-			response.sendRedirect("listTodoThisMonth");
+		RequestDispatcher dispatcher;
+		if(user!=null) {
+			if(request.getParameter("from").length()<10&&request.getParameter("tagname").length()<101&&request.getParameter("color").length()==7) {
+				String from = request.getParameter("from").trim();
+				try {
+					int id = Integer.parseInt(request.getParameter("id"));
+					String tagname = request.getParameter("tagname");
+					String color = request.getParameter("color");
+					
+					Tag tag = new Tag(id, tagname, color, user);
+					tagDao.updateTag(tag);
+					
+					
+					if (from.equals("dashboard")) {
+						response.sendRedirect("listDashboard");
+					} else if (from.equals("tododay")) {
+						response.sendRedirect("listTodo");
+					} else if (from.equals("todoweek")) {
+						response.sendRedirect("listTodoThisWeek");
+					} else {
+						response.sendRedirect("listTodoThisMonth");
+					}
+				}catch(Exception e) {
+					dispatcher = request.getRequestDispatcher("error.jsp");
+					
+					dispatcher.forward(request, response);
+				}
+			}
+		}else {
+			System.out.println("Nguoi dung null");
+			
+			dispatcher = request.getRequestDispatcher("index.jsp");
+			
+			dispatcher.forward(request, response);
 		}
 		
 	}

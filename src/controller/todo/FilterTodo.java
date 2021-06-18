@@ -57,298 +57,181 @@ public class FilterTodo extends HttpServlet {
 	}
 	private void filterTodo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("-------------------------đã vào filter");
-		int tagidFilter;
-		try {
-			tagidFilter = Integer.parseInt(request.getParameter("tagidFilter"));
-		}catch(Exception e)
-		{
-			tagidFilter = -1;
-		}
-		String prioFilter=request.getParameter("prioFilter").trim();
-		String stateFilter=request.getParameter("stateFilter").trim();
-		String type= request.getParameter("type");
-		String datefilter = request.getParameter("datefilter");
-		String week= request.getParameter("week");
-		String month= request.getParameter("month");
-		System.out.println(datefilter+ " ngày chọn khi xóa");
-		System.out.println(week+ " tuần chọn khi xóa");
-		System.out.println(month+ " tháng chọn khi xóa");
-		if(week==null||week.equals("null"))
-			week="";
-		if(datefilter==null||datefilter.equals("null"))
-			datefilter="";
-		if(month==null||month.equals("null"))
-			month="";
-		System.out.println(datefilter+ " ngày chọn khi xóa");
-		System.out.println(week+ " tuần chọn khi xóa");
-		System.out.println(month+ " tháng chọn khi xóa");
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		String sort=request.getParameter("sort");
 		User user = (User) session.getAttribute("user");
-		List<Todo> listTodo =userDao.getTodosByUser(user.getId());
-		List<Tag> listTag = userDao.getTagsByUser(user.getId());
-		List<Todo> result=new ArrayList<Todo>();
-		/*if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1&&datefilter.equals("")&&week.equals("")&&month.equals(""))
-		{
-			for(int i=0; i< listTodo.size();i++) {
-				result.add(listTodo.get(i));
-			}
-		}
-		else
-		{*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//lọc theo state của todo
-			if(stateFilter.equals("null")==false)
+		if(user!=null) {
+			int tagidFilter;
+			try {
+				tagidFilter = Integer.parseInt(request.getParameter("tagidFilter"));
+			}catch(Exception e)
 			{
-				for(int i=0; i< listTodo.size();i++) {
-					if (listTodo.get(i).getDone()==Boolean.parseBoolean(request.getParameter("stateFilter")))
-					{
-						result.add(listTodo.get(i));
-					}
-					
-				}
+				tagidFilter = -1;
 			}
-			//lọc theo prio
-			if(prioFilter.equals("null")==false)
-			{
-				if (result.size() > 0)
+			String prioFilter=request.getParameter("prioFilter").trim();
+			String stateFilter=request.getParameter("stateFilter").trim();
+			String type= request.getParameter("type");
+			String datefilter = request.getParameter("datefilter");
+			String week= request.getParameter("week");
+			String month= request.getParameter("month");
+			if(week==null||week.equals("null"))
+				week="";
+			if(datefilter==null||datefilter.equals("null"))
+				datefilter="";
+			if(month==null||month.equals("null"))
+				month="";
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			String sort=request.getParameter("sort");
+			List<Todo> listTodo =userDao.getTodosByUser(user.getId());
+			List<Tag> listTag = userDao.getTagsByUser(user.getId());
+			List<Todo> result=new ArrayList<Todo>();
+				if(stateFilter.equals("null")==false)
 				{
-					for( int i=0; i< result.size();i++) {
-						if (result.get(i).getPriority().equals(prioFilter)==false)
-						{
-							result.remove(result.get(i));
-							i--;
-						}
-					}
-				}
-				else if(stateFilter.equals("null"))
-				{
-					for( int i=0; i< listTodo.size();i++) {
-						if (listTodo.get(i).getPriority().equals(prioFilter))
+					for(int i=0; i< listTodo.size();i++) {
+						if (listTodo.get(i).getDone()==Boolean.parseBoolean(request.getParameter("stateFilter")))
 						{
 							result.add(listTodo.get(i));
 						}
+						
 					}
 				}
-			}
-			//lọc theo tag
-			if(tagidFilter!=-1)
-			{
-				if (result.size() > 0)
+				//lá»�c theo prio
+				if(prioFilter.equals("null")==false)
 				{
-						for( int i=0; i< result.size();i++) 
-						{
-							if (result.get(i).getTag().getId()!=tagidFilter)
+					if (result.size() > 0)
+					{
+						for( int i=0; i< result.size();i++) {
+							if (result.get(i).getPriority().equals(prioFilter)==false)
 							{
 								result.remove(result.get(i));
 								i--;
 							}
 						}
-				}
-				else if(stateFilter.equals("null") && prioFilter.equals("null"))
-				{
-					for( int i=0; i< listTodo.size();i++) 
-					{
-						if (listTodo.get(i).getTag().getId()==tagidFilter)
-						{
-							result.add(listTodo.get(i));
-						}
 					}
-				}
-			}
-			//LỌC THEO NGÀY
-			if(type.equals("date"))
-			{
-				if(datefilter.equals("")==false)
-				{
-					try
+					else if(stateFilter.equals("null"))
 					{
-						Date date_filter = df.parse(datefilter);
-						if (result.size() > 0)
-						{
-								for( int i=0; i< result.size();i++) 
-								{
-									if (result.get(i).getDate().compareTo(date_filter)>0||result.get(i).getDate().compareTo(date_filter)<0)
-									{
-										result.remove(result.get(i));
-										i--;
-									}
-								}
-						}
-						else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
-						{
-							for( int i=0; i< listTodo.size();i++) 
-							{
-								if (listTodo.get(i).getDate().compareTo(date_filter)==0)
-								{
-									result.add(listTodo.get(i));
-								}
-							}
-						}
-					}
-					catch (ParseException e)
-					{
-					}
-				}
-				else//ngày rỗng thì lọc theo ngày hôm nay
-				{
-					String now= LocalDate.now().toString();
-					try {
-						Date date_filter = df.parse(now);
-						if (result.size() > 0)
-						{
-								for( int i=0; i< result.size();i++) 
-								{
-									if (result.get(i).getDate().compareTo(date_filter)>0||result.get(i).getDate().compareTo(date_filter)<0)
-									{
-										result.remove(result.get(i));
-										i--;
-									}
-								}
-						}
-						else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
-						{
-							for( int i=0; i< listTodo.size();i++) 
-							{
-								if (listTodo.get(i).getDate().compareTo(date_filter)==0)
-								{
-									result.add(listTodo.get(i));
-								}
-							}
-						}
-					}catch(Exception e) {
-						
-					}
-				}
-			}
-			//lọc theo tuần
-			else if(type.equals("week"))
-			{
-				if(week.equals("")==false)
-				{
-					//Tách tuần và năm ra
-					String[] parts = week.split("-W");
-					String part1 = parts[0]; 
-					String part2 = parts[1]; 
-					int weekk = Integer.parseInt(part2);
-					int year = Integer.parseInt(part1);
-					// Get calendar, clear it and set week number and year.
-					Calendar calendar = Calendar.getInstance();
-					calendar.clear();
-					calendar.set(Calendar.YEAR, year);
-					if(year==2020)
-						calendar.set(Calendar.WEEK_OF_YEAR, weekk);
-					else
-						calendar.set(Calendar.WEEK_OF_YEAR, weekk+1);
-					// Now get the first day of week.
-					Date datestart =calendar.getTime();
-					calendar.add(Calendar.DATE, 6);
-					Date dateend = calendar.getTime();
-					if (result.size() > 0)
-					{
-							for( int i=0; i< result.size();i++)
-							{
-								if (result.get(i).getDate().compareTo(datestart)<0||result.get(i).getDate().compareTo(dateend)>0)
-								{
-									result.remove(result.get(i));
-									i--;
-								}
-							}
-					}
-					else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
-					{
-						for( int i=0; i< listTodo.size();i++) 
-						{
-							if (listTodo.get(i).getDate().compareTo(datestart)>=0&&listTodo.get(i).getDate().compareTo(dateend)<=0)
+						for( int i=0; i< listTodo.size();i++) {
+							if (listTodo.get(i).getPriority().equals(prioFilter))
 							{
 								result.add(listTodo.get(i));
 							}
 						}
 					}
 				}
-				else
+				//lá»�c theo tag
+				if(tagidFilter!=-1)
 				{
-					String now= LocalDate.now().toString();
-					String[] parts = now.split("-");
-					String part0 = parts[0]; 
-					String part1 = parts[1]; 
-					String part2 = parts[2]; 
-					Calendar calendar = Calendar.getInstance(); 
-					calendar.clear();
-					calendar.set(Integer.parseInt(part0), Integer.parseInt(part1)-1,Integer.parseInt(part2) );       
-					int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
-					calendar.clear();
-					calendar.set(Calendar.YEAR, Integer.parseInt(part0));
-					calendar.set(Calendar.WEEK_OF_YEAR, weekOfYear);
-					// Now get the first day of week.
-					Date datestart =calendar.getTime();
-					calendar.add(Calendar.DATE, 6);
-					Date dateend = calendar.getTime();
 					if (result.size() > 0)
 					{
-							for( int i=0; i< result.size();i++)
+							for( int i=0; i< result.size();i++) 
 							{
-								if (result.get(i).getDate().compareTo(datestart)<0||result.get(i).getDate().compareTo(dateend)>0)
+								if (result.get(i).getTag().getId()!=tagidFilter)
 								{
 									result.remove(result.get(i));
 									i--;
 								}
 							}
 					}
-					else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
+					else if(stateFilter.equals("null") && prioFilter.equals("null"))
 					{
 						for( int i=0; i< listTodo.size();i++) 
 						{
-							if (listTodo.get(i).getDate().compareTo(datestart)>=0&&listTodo.get(i).getDate().compareTo(dateend)<=0)
+							if (listTodo.get(i).getTag().getId()==tagidFilter)
 							{
 								result.add(listTodo.get(i));
 							}
 						}
 					}
 				}
-			}
-			//lọc theo tháng
-			else if(type.equals("month"))
-			{
-				if(month.equals("")==false)
+				//Lá»ŒC THEO NGĂ€Y
+				if(type.equals("date"))
 				{
-					//Tách tháng và năm
-					String[] parts = month.split("-");
-					String part1 = parts[0]; 
-					String part2 = parts[1]; 
-						int monthh = Integer.parseInt(part2);
+					if(datefilter.equals("")==false)
+					{
+						try
+						{
+							Date date_filter = df.parse(datefilter);
+							if (result.size() > 0)
+							{
+									for( int i=0; i< result.size();i++) 
+									{
+										if (result.get(i).getDate().compareTo(date_filter)>0||result.get(i).getDate().compareTo(date_filter)<0)
+										{
+											result.remove(result.get(i));
+											i--;
+										}
+									}
+							}
+							else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
+							{
+								for( int i=0; i< listTodo.size();i++) 
+								{
+									if (listTodo.get(i).getDate().compareTo(date_filter)==0)
+									{
+										result.add(listTodo.get(i));
+									}
+								}
+							}
+						}
+						catch (ParseException e)
+						{
+						}
+					}
+					else//ngĂ y rá»—ng thĂ¬ lá»�c theo ngĂ y hĂ´m nay
+					{
+						String now= LocalDate.now().toString();
+						try {
+							Date date_filter = df.parse(now);
+							if (result.size() > 0)
+							{
+									for( int i=0; i< result.size();i++) 
+									{
+										if (result.get(i).getDate().compareTo(date_filter)>0||result.get(i).getDate().compareTo(date_filter)<0)
+										{
+											result.remove(result.get(i));
+											i--;
+										}
+									}
+							}
+							else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
+							{
+								for( int i=0; i< listTodo.size();i++) 
+								{
+									if (listTodo.get(i).getDate().compareTo(date_filter)==0)
+									{
+										result.add(listTodo.get(i));
+									}
+								}
+							}
+						}catch(Exception e) {
+							
+						}
+					}
+				}
+				//lá»�c theo tuáº§n
+				else if(type.equals("week"))
+				{
+					if(week.equals("")==false)
+					{
+						//TĂ¡ch tuáº§n vĂ  nÄƒm ra
+						String[] parts = week.split("-W");
+						String part1 = parts[0]; 
+						String part2 = parts[1]; 
+						int weekk = Integer.parseInt(part2);
 						int year = Integer.parseInt(part1);
 						// Get calendar, clear it and set week number and year.
 						Calendar calendar = Calendar.getInstance();
 						calendar.clear();
-						calendar.set(Calendar.MONTH, monthh-1);
 						calendar.set(Calendar.YEAR, year);
+						if(year==2020)
+							calendar.set(Calendar.WEEK_OF_YEAR, weekk);
+						else
+							calendar.set(Calendar.WEEK_OF_YEAR, weekk+1);
 						// Now get the first day of week.
-						Date datestart = calendar.getTime();
-						//Kiểm tra tháng để tìm ngày cuối tháng
-						if (monthh==2)
-						{
-							if((year%400==0||(year%4==0&&year%100!=0)))//năm nhuận
-							{
-								calendar.add(Calendar.DAY_OF_MONTH,28);
-							}
-							else
-							{
-								calendar.add(Calendar.DAY_OF_MONTH,27);
-							}
-							}
-						else if(monthh==1||monthh==3||monthh==5||monthh==7||monthh==8||monthh==10||monthh==12)
-						{
-							calendar.add(Calendar.DAY_OF_MONTH,30);
-						}
-						else if(monthh==4||monthh==6||monthh==9||monthh==11)
-						{
-							calendar.add(Calendar.DAY_OF_MONTH,29);
-						}
+						Date datestart =calendar.getTime();
+						calendar.add(Calendar.DATE, 6);
 						Date dateend = calendar.getTime();
 						if (result.size() > 0)
 						{
-								for( int i=0; i< result.size();i++) 
+								for( int i=0; i< result.size();i++)
 								{
 									if (result.get(i).getDate().compareTo(datestart)<0||result.get(i).getDate().compareTo(dateend)>0)
 									{
@@ -367,167 +250,278 @@ public class FilterTodo extends HttpServlet {
 								}
 							}
 						}
+					}
+					else
+					{
+						String now= LocalDate.now().toString();
+						String[] parts = now.split("-");
+						String part0 = parts[0]; 
+						String part1 = parts[1]; 
+						String part2 = parts[2]; 
+						Calendar calendar = Calendar.getInstance(); 
+						calendar.clear();
+						calendar.set(Integer.parseInt(part0), Integer.parseInt(part1)-1,Integer.parseInt(part2) );       
+						int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
+						calendar.clear();
+						calendar.set(Calendar.YEAR, Integer.parseInt(part0));
+						calendar.set(Calendar.WEEK_OF_YEAR, weekOfYear);
+						// Now get the first day of week.
+						Date datestart =calendar.getTime();
+						calendar.add(Calendar.DATE, 6);
+						Date dateend = calendar.getTime();
+						if (result.size() > 0)
+						{
+								for( int i=0; i< result.size();i++)
+								{
+									if (result.get(i).getDate().compareTo(datestart)<0||result.get(i).getDate().compareTo(dateend)>0)
+									{
+										result.remove(result.get(i));
+										i--;
+									}
+								}
+						}
+						else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
+						{
+							for( int i=0; i< listTodo.size();i++) 
+							{
+								if (listTodo.get(i).getDate().compareTo(datestart)>=0&&listTodo.get(i).getDate().compareTo(dateend)<=0)
+								{
+									result.add(listTodo.get(i));
+								}
+							}
+						}
+					}
+				}
+				//lá»�c theo thĂ¡ng
+				else if(type.equals("month"))
+				{
+					if(month.equals("")==false)
+					{
+						//TĂ¡ch thĂ¡ng vĂ  nÄƒm
+						String[] parts = month.split("-");
+						String part1 = parts[0]; 
+						String part2 = parts[1]; 
+							int monthh = Integer.parseInt(part2);
+							int year = Integer.parseInt(part1);
+							// Get calendar, clear it and set week number and year.
+							Calendar calendar = Calendar.getInstance();
+							calendar.clear();
+							calendar.set(Calendar.MONTH, monthh-1);
+							calendar.set(Calendar.YEAR, year);
+							// Now get the first day of week.
+							Date datestart = calendar.getTime();
+							//Kiá»ƒm tra thĂ¡ng Ä‘á»ƒ tĂ¬m ngĂ y cuá»‘i thĂ¡ng
+							if (monthh==2)
+							{
+								if((year%400==0||(year%4==0&&year%100!=0)))//nÄƒm nhuáº­n
+								{
+									calendar.add(Calendar.DAY_OF_MONTH,28);
+								}
+								else
+								{
+									calendar.add(Calendar.DAY_OF_MONTH,27);
+								}
+								}
+							else if(monthh==1||monthh==3||monthh==5||monthh==7||monthh==8||monthh==10||monthh==12)
+							{
+								calendar.add(Calendar.DAY_OF_MONTH,30);
+							}
+							else if(monthh==4||monthh==6||monthh==9||monthh==11)
+							{
+								calendar.add(Calendar.DAY_OF_MONTH,29);
+							}
+							Date dateend = calendar.getTime();
+							if (result.size() > 0)
+							{
+									for( int i=0; i< result.size();i++) 
+									{
+										if (result.get(i).getDate().compareTo(datestart)<0||result.get(i).getDate().compareTo(dateend)>0)
+										{
+											result.remove(result.get(i));
+											i--;
+										}
+									}
+							}
+							else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
+							{
+								for( int i=0; i< listTodo.size();i++) 
+								{
+									if (listTodo.get(i).getDate().compareTo(datestart)>=0&&listTodo.get(i).getDate().compareTo(dateend)<=0)
+									{
+										result.add(listTodo.get(i));
+									}
+								}
+							}
+					}
+					else
+					{
+						String now= LocalDate.now().toString();
+						String[] parts = now.split("-");
+						String part0 = parts[0]; 
+						String part1 = parts[1]; 
+						String part2 = parts[2]; 
+						// Get calendar, clear it and set week number and year.
+						Calendar calendar = Calendar.getInstance();
+						calendar.clear();
+						calendar.set(Calendar.MONTH, Integer.parseInt(part1)-1);
+						calendar.set(Calendar.YEAR,Integer.parseInt(part0));
+						// Now get the first day of week.
+						Date datestart = calendar.getTime();
+						//Kiá»ƒm tra thĂ¡ng Ä‘á»ƒ tĂ¬m ngĂ y cuá»‘i thĂ¡ng
+						if (Integer.parseInt(part1)==2)
+							{
+								if((Integer.parseInt(part0)%400==0||(Integer.parseInt(part0)%4==0&&Integer.parseInt(part0)%100!=0)))//nÄƒm nhuáº­n
+									calendar.add(Calendar.DAY_OF_MONTH,28);
+								else
+									calendar.add(Calendar.DAY_OF_MONTH,27);
+							}
+							else if(Integer.parseInt(part1)==1||Integer.parseInt(part1)==3||Integer.parseInt(part1)==5||Integer.parseInt(part1)==7||Integer.parseInt(part1)==8||Integer.parseInt(part1)==10||Integer.parseInt(part1)==12)
+							{
+								calendar.add(Calendar.DAY_OF_MONTH,30);
+							}
+							else if(Integer.parseInt(part1)==4||Integer.parseInt(part1)==6||Integer.parseInt(part1)==9||Integer.parseInt(part1)==11)
+							{
+								calendar.add(Calendar.DAY_OF_MONTH,29);
+							}
+							Date dateend = calendar.getTime();
+							if (result.size() > 0)
+							{
+									for( int i=0; i< result.size();i++) 
+									{
+										if (result.get(i).getDate().compareTo(datestart)<0||result.get(i).getDate().compareTo(dateend)>0)
+										{
+											result.remove(result.get(i));
+											i--;
+										}
+									}
+							}
+							else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
+							{
+								for( int i=0; i< listTodo.size();i++) 
+								{
+									if (listTodo.get(i).getDate().compareTo(datestart)>=0&&listTodo.get(i).getDate().compareTo(dateend)<=0)
+									{
+										result.add(listTodo.get(i));
+									}
+								}
+							}
+							
+					}
+				}
+				
+			//}
+			/////////////////////////////////Sort/////////////////////////////
+			try {
+				if(sort.equals("Sort")) {
+					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio High chÆ°a thá»±c hiá»‡n xong
+					List<Todo> high=new ArrayList<Todo>();
+					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Medium chÆ°a thá»±c hiá»‡n xong
+					List<Todo> medium=new ArrayList<Todo>();
+					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Low chÆ°a thá»±c hiá»‡n xong
+					List<Todo> low=new ArrayList<Todo>();
+					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Hight thá»±c hiá»‡n xong
+					List<Todo> highDone=new ArrayList<Todo>();
+					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Medium chÆ°a thá»±c hiá»‡n xong
+					List<Todo> mediumDone=new ArrayList<Todo>();
+					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Low chÆ°a thá»±c hiá»‡n xong
+					List<Todo> lowDone=new ArrayList<Todo>();
+					for(int i=0; i< result.size();i++) {
+						if(result.get(i).getPriority().equals("High")) {
+							if(result.get(i).getDone()==false)
+							{
+								high.add(result.get(i));
+							}
+							else
+							{
+								highDone.add(result.get(i));
+							}
+						}
+						else if(result.get(i).getPriority().equals("Medium")) {
+							if(result.get(i).getDone()==false)
+							{
+								medium.add(result.get(i));
+							}
+							else
+							{
+								mediumDone.add(result.get(i));
+							}
+						}
+						else if(result.get(i).getPriority().equals("Low")) {
+							if(result.get(i).getDone()==false)
+							{
+								low.add(result.get(i));
+							}
+							else
+							{
+								lowDone.add(result.get(i));
+							}
+						}
+					}
+					List<Todo> resultSort=new ArrayList<Todo>();
+					for(int i = 0; i<(high.size()+medium.size()); i++)
+					{
+						   if(i<high.size())
+							   resultSort.add(high.get(i));
+						   else
+							   resultSort.add(medium.get(i-high.size()));
+					}
+					int length=resultSort.size()+low.size();
+					for(int i = resultSort.size(); i<length; i++)
+					{
+							resultSort.add(low.get(i-resultSort.size()));
+					}
+					length=resultSort.size()+highDone.size();
+					for(int i = resultSort.size(); i<length; i++)
+					{
+							resultSort.add(highDone.get(i-resultSort.size()));
+					}
+					length=resultSort.size()+mediumDone.size();
+					for(int i = resultSort.size(); i<length; i++)
+					{
+							resultSort.add(mediumDone.get(i-resultSort.size()));
+					}
+					length=resultSort.size()+lowDone.size();
+					for(int i = resultSort.size(); i<length; i++)
+					{
+							resultSort.add(lowDone.get(i-resultSort.size()));
+					}
+					request.setAttribute("listTodo", resultSort);
+					request.setAttribute("listTag", listTag);
 				}
 				else
 				{
-					String now= LocalDate.now().toString();
-					String[] parts = now.split("-");
-					String part0 = parts[0]; 
-					String part1 = parts[1]; 
-					String part2 = parts[2]; 
-					// Get calendar, clear it and set week number and year.
-					Calendar calendar = Calendar.getInstance();
-					calendar.clear();
-					calendar.set(Calendar.MONTH, Integer.parseInt(part1)-1);
-					calendar.set(Calendar.YEAR,Integer.parseInt(part0));
-					// Now get the first day of week.
-					Date datestart = calendar.getTime();
-					//Kiểm tra tháng để tìm ngày cuối tháng
-					if (Integer.parseInt(part1)==2)
-						{
-							if((Integer.parseInt(part0)%400==0||(Integer.parseInt(part0)%4==0&&Integer.parseInt(part0)%100!=0)))//năm nhuận
-								calendar.add(Calendar.DAY_OF_MONTH,28);
-							else
-								calendar.add(Calendar.DAY_OF_MONTH,27);
-						}
-						else if(Integer.parseInt(part1)==1||Integer.parseInt(part1)==3||Integer.parseInt(part1)==5||Integer.parseInt(part1)==7||Integer.parseInt(part1)==8||Integer.parseInt(part1)==10||Integer.parseInt(part1)==12)
-						{
-							calendar.add(Calendar.DAY_OF_MONTH,30);
-						}
-						else if(Integer.parseInt(part1)==4||Integer.parseInt(part1)==6||Integer.parseInt(part1)==9||Integer.parseInt(part1)==11)
-						{
-							calendar.add(Calendar.DAY_OF_MONTH,29);
-						}
-						Date dateend = calendar.getTime();
-						if (result.size() > 0)
-						{
-								for( int i=0; i< result.size();i++) 
-								{
-									if (result.get(i).getDate().compareTo(datestart)<0||result.get(i).getDate().compareTo(dateend)>0)
-									{
-										result.remove(result.get(i));
-										i--;
-									}
-								}
-						}
-						else if(stateFilter.equals("null") && prioFilter.equals("null")&&tagidFilter==-1)
-						{
-							for( int i=0; i< listTodo.size();i++) 
-							{
-								if (listTodo.get(i).getDate().compareTo(datestart)>=0&&listTodo.get(i).getDate().compareTo(dateend)<=0)
-								{
-									result.add(listTodo.get(i));
-								}
-							}
-						}
-						
+					request.setAttribute("listTodo", result);
+					request.setAttribute("listTag", listTag);
 				}
+				System.out.print("Ä‘á»™ dĂ i chuá»—i tráº£ vá»� sau khi sort "+result.size());
 			}
-			
-		//}
-		/////////////////////////////////Sort/////////////////////////////
-		try {
-			if(sort.equals("Sort")) {
-				//tạo mảng chứa các todo có prio High chưa thực hiện xong
-				List<Todo> high=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Medium chưa thực hiện xong
-				List<Todo> medium=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Low chưa thực hiện xong
-				List<Todo> low=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Hight thực hiện xong
-				List<Todo> highDone=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Medium chưa thực hiện xong
-				List<Todo> mediumDone=new ArrayList<Todo>();
-				//tạo mảng chứa các todo có prio Low chưa thực hiện xong
-				List<Todo> lowDone=new ArrayList<Todo>();
-				for(int i=0; i< result.size();i++) {
-					if(result.get(i).getPriority().equals("High")) {
-						if(result.get(i).getDone()==false)
-						{
-							high.add(result.get(i));
-						}
-						else
-						{
-							highDone.add(result.get(i));
-						}
-					}
-					else if(result.get(i).getPriority().equals("Medium")) {
-						if(result.get(i).getDone()==false)
-						{
-							medium.add(result.get(i));
-						}
-						else
-						{
-							mediumDone.add(result.get(i));
-						}
-					}
-					else if(result.get(i).getPriority().equals("Low")) {
-						if(result.get(i).getDone()==false)
-						{
-							low.add(result.get(i));
-						}
-						else
-						{
-							lowDone.add(result.get(i));
-						}
-					}
-				}
-				List<Todo> resultSort=new ArrayList<Todo>();
-				for(int i = 0; i<(high.size()+medium.size()); i++)
-				{
-					   if(i<high.size())
-						   resultSort.add(high.get(i));
-					   else
-						   resultSort.add(medium.get(i-high.size()));
-				}
-				int length=resultSort.size()+low.size();
-				for(int i = resultSort.size(); i<length; i++)
-				{
-						resultSort.add(low.get(i-resultSort.size()));
-				}
-				length=resultSort.size()+highDone.size();
-				for(int i = resultSort.size(); i<length; i++)
-				{
-						resultSort.add(highDone.get(i-resultSort.size()));
-				}
-				length=resultSort.size()+mediumDone.size();
-				for(int i = resultSort.size(); i<length; i++)
-				{
-						resultSort.add(mediumDone.get(i-resultSort.size()));
-				}
-				length=resultSort.size()+lowDone.size();
-				for(int i = resultSort.size(); i<length; i++)
-				{
-						resultSort.add(lowDone.get(i-resultSort.size()));
-				}
-				request.setAttribute("listTodo", resultSort);
-				request.setAttribute("listTag", listTag);
-			}
-			else
-			{
+			catch(Exception e) {
+				System.out.print("Ä‘á»™ dĂ i chuá»—i tráº£ vá»� "+result.size());
 				request.setAttribute("listTodo", result);
 				request.setAttribute("listTag", listTag);
 			}
-			System.out.print("độ dài chuỗi trả về sau khi sort "+result.size());
-		}
-		catch(Exception e) {
-			System.out.print("độ dài chuỗi trả về "+result.size());
-			request.setAttribute("listTodo", result);
-			request.setAttribute("listTag", listTag);
-		}
-		if(type.equals("week"))
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("todoweek.jsp");
-			dispatcher.forward(request, response);
-		}
-		else if(type.equals("date"))
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("tododay.jsp");
-			dispatcher.forward(request, response);
-		}
-		else if(type.equals("month"))
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("todomonth.jsp");
+			if(type.equals("week"))
+			{
+				RequestDispatcher dispatcher = request.getRequestDispatcher("todoweek.jsp");
+				dispatcher.forward(request, response);
+			}
+			else if(type.equals("date"))
+			{
+				RequestDispatcher dispatcher = request.getRequestDispatcher("tododay.jsp");
+				dispatcher.forward(request, response);
+			}
+			else if(type.equals("month"))
+			{
+				RequestDispatcher dispatcher = request.getRequestDispatcher("todomonth.jsp");
+				dispatcher.forward(request, response);
+			}
+		}else {
+			System.out.println("Nguoi dung null");
+			
+			RequestDispatcher dispatcher;
+			
+			dispatcher = request.getRequestDispatcher("index.jsp");
+			
 			dispatcher.forward(request, response);
 		}
 	}
