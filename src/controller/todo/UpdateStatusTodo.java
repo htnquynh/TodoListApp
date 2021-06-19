@@ -30,7 +30,7 @@ public class UpdateStatusTodo extends HttpServlet {
 	private TodoDao todoDao;
 	private TagDao tagDao;
 	HttpSession session = null;
-       
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -69,39 +69,51 @@ public class UpdateStatusTodo extends HttpServlet {
 	}
 	private void updateStatusTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
-		String from = request.getParameter("from").trim();
-		
-		int id = Integer.parseInt(request.getParameter("id"));
-		Todo td = todoDao.getTodo(id);
+
 		User user = (User) session.getAttribute("user");
-		if (td.getUser().getId()==user.getId())
-		{
-	        System.out.println(td.toString());
-	        if(td.getDone()==false){
-	            td.setDone(true);
-	        }
-	        
-	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-	        Date date = new Date();
-	        td.setDoneat(date);
-	        System.out.println(td.toString());
-	        todoDao.updateTodo(td);
-	        
-	        if (from.equals("dashboard")) {
-				response.sendRedirect("listDashboard");
-			} else if (from.equals("tododay")) {
-				response.sendRedirect("listTodo");
-			} else if (from.equals("todoweek")) {
-				response.sendRedirect("listTodoThisWeek");
+		if(user!=null) {
+			
+			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || 
+					request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {
+				String from = request.getParameter("from").trim();
+				
+				int id = Integer.parseInt(request.getParameter("id"));
+				Todo td = todoDao.getTodo(id);
+				if (td.getUser().getId()==user.getId()) {
+					System.out.println(td.toString());
+					if(td.getDone() == false){
+						td.setDone(true);
+					}
+					
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+					Date date = new Date();
+					td.setDoneat(date);
+					System.out.println(td.toString());
+					todoDao.updateTodo(td);
+					
+					if (from.equals("dashboard")) {
+						response.sendRedirect("listDashboard");
+					} else if (from.equals("tododay")) {
+						response.sendRedirect("listTodo");
+					} else if (from.equals("todoweek")) {
+						response.sendRedirect("listTodoThisWeek");
+					} else {
+						response.sendRedirect("listTodoThisMonth");
+					}
+				} else {
+					session.invalidate();
+					RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+					dispatcher.forward(request, response);
+				}
 			} else {
-				response.sendRedirect("listTodoThisMonth");
+				RequestDispatcher dispatcher;
+				dispatcher = request.getRequestDispatcher("error.jsp");
+				dispatcher.forward(request, response);
 			}
-		}
-		else
-		{
-			session.invalidate();
-			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+		} else {
+			System.out.println("Nguoi dung null");
+			RequestDispatcher dispatcher;
+			dispatcher = request.getRequestDispatcher("index.jsp");
 			dispatcher.forward(request, response);
 		}
 	}

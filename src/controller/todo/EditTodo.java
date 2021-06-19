@@ -49,40 +49,55 @@ public class EditTodo extends HttpServlet {
 	private void showEditTodoForm(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("id"));
-		
-		String from = request.getParameter("from").trim();
-		
-		System.out.println("From: ");
-		System.out.println(from);
-		
-		/* String type = request.getParameter("type"); */
-		
-		Todo existingTodo = todoDao.getTodo(id);
 		User user = (User) session.getAttribute("user");
-		if (existingTodo.getUser().getId()==user.getId())
-		{request.setAttribute("existingTodo", existingTodo);
-		request.setAttribute("openFormEditTodo", "open");
-		
-		RequestDispatcher dispatcher;
-		
-		if (from.equals("dashboard")) {
-			dispatcher = request.getRequestDispatcher("dashboard.jsp");
-		} else if (from.equals("tododay")) {
-			dispatcher = request.getRequestDispatcher("tododay.jsp");
-		} else if (from.equals("todoweek")) {
-			dispatcher = request.getRequestDispatcher("todoweek.jsp");
+		if(user!=null) {
+			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || 
+					request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {
+				String from = request.getParameter("from").trim();
+				try {
+					int id = Integer.parseInt(request.getParameter("id"));
+					
+					Todo existingTodo = todoDao.getTodo(id);
+					if (existingTodo.getUser().getId()==user.getId()) {
+						request.setAttribute("existingTodo", existingTodo);
+						request.setAttribute("openFormEditTodo", "open");
+						
+						RequestDispatcher dispatcher;
+						
+						if (from.equals("dashboard")) {
+							dispatcher = request.getRequestDispatcher("dashboard.jsp");
+						} else if (from.equals("tododay")) {
+							dispatcher = request.getRequestDispatcher("tododay.jsp");
+						} else if (from.equals("todoweek")) {
+							dispatcher = request.getRequestDispatcher("todoweek.jsp");
+						} else {
+							dispatcher = request.getRequestDispatcher("todomonth.jsp");
+						}
+						
+						dispatcher.forward(request, response);
+					} else {
+						session.invalidate();
+						RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+						dispatcher.forward(request, response);
+					}
+
+				} catch (Exception e) {
+					RequestDispatcher dispatcher;
+					dispatcher = request.getRequestDispatcher("error.jsp");
+					dispatcher.forward(request, response);
+				}
+				
+			} else {
+				RequestDispatcher dispatcher;
+				dispatcher = request.getRequestDispatcher("error.jsp");
+				dispatcher.forward(request, response);
+			}
 		} else {
-			dispatcher = request.getRequestDispatcher("todomonth.jsp");
-		}
-		
-		dispatcher.forward(request, response);
-		}
-		else
-		{
-			session.invalidate();
-			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+			System.out.println("Nguoi dung null");
+			RequestDispatcher dispatcher;
+			dispatcher = request.getRequestDispatcher("index.jsp");
 			dispatcher.forward(request, response);
 		}
+		
 	}
 }

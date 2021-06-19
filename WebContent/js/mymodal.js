@@ -48,29 +48,7 @@ function outside_addTagModal_Click(e) {
 }
 
 
-// filter todo modal
-var filterTodoModal = document.getElementById("filterTodoModal");
-var btnOpen_filterTodoModal = document.getElementById("btn-open-filterTodoModal");
-var btnClose_filterTodoModal = document.getElementById("btn-close-filterTodoModal");
 
-btnOpen_filterTodoModal.addEventListener("click", open_filterTodoModal);
-btnClose_filterTodoModal.addEventListener("click", close_filterTodoModal);
-window.addEventListener("click", outside_filterTodoModal_Click);
-
-
-function open_filterTodoModal() {
-    filterTodoModal.style.display = "flex";
-}
-
-function close_filterTodoModal() {
-    filterTodoModal.style.display = "none";
-}
-
-function outside_filterTodoModal_Click(e) {
-    if (e.target == filterTodoModal) {
-        filterTodoModal.style.display = "none";
-    }
-}
 
 // edit todo modal
 var editTodoModal = document.getElementById("editTodoModal");
@@ -120,6 +98,30 @@ function outside_editTagModal_Click(e) {
      if (e.target == editTagModal) {
          editTagModal.style.display = "none";
      }
+}
+
+// filter todo modal
+var filterTodoModal = document.getElementById("filterTodoModal");
+var btnOpen_filterTodoModal = document.getElementById("btn-open-filterTodoModal");
+var btnClose_filterTodoModal = document.getElementById("btn-close-filterTodoModal");
+
+btnOpen_filterTodoModal.addEventListener("click", open_filterTodoModal);
+btnClose_filterTodoModal.addEventListener("click", close_filterTodoModal);
+window.addEventListener("click", outside_filterTodoModal_Click);
+
+
+function open_filterTodoModal() {
+    filterTodoModal.style.display = "flex";
+}
+
+function close_filterTodoModal() {
+    filterTodoModal.style.display = "none";
+}
+
+function outside_filterTodoModal_Click(e) {
+    if (e.target == filterTodoModal) {
+        filterTodoModal.style.display = "none";
+    }
 }
 
 

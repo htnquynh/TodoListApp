@@ -22,10 +22,10 @@ public class HibernateUtils {
 				Configuration configuration = new Configuration();
 				
 				Properties settings = new Properties();
-				settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
+				settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
 				settings.put(Environment.URL, "jdbc:mysql://localhost:3306/todoweb?useSSL=false&allowPublicKeyRetrieval=true");
 				settings.put(Environment.USER, "root");
-				settings.put(Environment.PASS, "0000");
+				settings.put(Environment.PASS, "htnq.18110348");
 				settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
 				
 				settings.put(Environment.SHOW_SQL, "true");
@@ -40,7 +40,7 @@ public class HibernateUtils {
 				configuration.addAnnotatedClass(Tag.class);
 				
 				ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-				System.out.println("Connect");
+				System.out.println("Hibernate Java Config serviceRegistry created");
 				sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 				
 				return sessionFactory;

@@ -31,6 +31,9 @@ public class User {
 	@Column(name="pass")
 	protected String password;
 	
+	@Column(name="salt")
+	protected String salt;
+	
 	@Column(name="fullname")
 	protected String fullname;
 	
@@ -70,6 +73,15 @@ public class User {
 		super();
 		this.email = email;
 		this.password = password;
+		this.fullname = fullname;
+		this.gender = gender;
+	}
+	
+	public User(String email, String password, String salt, String fullname, Boolean gender) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.salt = salt;
 		this.fullname = fullname;
 		this.gender = gender;
 	}
@@ -124,6 +136,14 @@ public class User {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getSalt() {
+		return salt;
+	}
+	
+	public void setSall(String salt) {
+		this.salt = salt;
 	}
 	
 	public String getFullname() {

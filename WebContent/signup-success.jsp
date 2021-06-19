@@ -138,9 +138,9 @@
 	<div class="right-decor">
     	<h3>Welcome to Todo App</h3>
     	<p>Having a list of all your tasks will allow you to sit down and make a plan. One study showed that fifteen minutes spent planning could save an hour of execution time!</p>
-    	</a>
     	
-    	<a href="${pageContext.request.contextPath}/login.jsp"> Login 
+    	<a href="${pageContext.request.contextPath}/login.jsp">
+    	Login 
     	<svg xmlns="http://www.w3.org/2000/svg" 
     			enable-background="new 0 0 24 24" 
     			height="16px" viewBox="0 0 24 24" 
@@ -148,11 +148,9 @@
     		<rect fill="none" height="16" width="16"/>
     		<path d="M15,5l-1.41,1.41L18.17,11H2V13h16.17l-4.59,4.59L15,19l7-7L15,5z"/>
     	</svg>
-    	
-		
+    	</a>
+    		
     </div>
 
-    
-   
 </body>
 </html>

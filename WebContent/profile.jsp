@@ -150,37 +150,23 @@
                 <form action="${pageContext.request.contextPath}/updateUser" method="post">
                     <div class="form-container">
                         <div class="input-text">
-                            <label for="email">Email:</label>
-                            <input type="email" name="email" value="<c:out value='${sessionScope.user.email}'/>" required>
-                            
-                            
-                            <div class="input-error">
-                            	<p> <strong><c:out value="${email}"/></strong><c:out value="${emailError}"/> </p>
-                           	</div>
-                        </div>
-        
-                        <div class="input-password">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" value="<c:out value='${sessionScope.user.password}'/>" required>
-                        </div>
-    
-                        <div class="input-text">
                             <label for="fullname">Your name</label>
                             <input type="text" name="fullname" value="<c:out value='${sessionScope.user.fullname}'/>" required>
                         </div>
-    
+                        
                         <div class="input-radio">
-                            <label>Gender</label>
-                            <div class="radio-btn">
-                
-                                <input type="radio" id="male" name="gender" value="male" <c:if test="${sessionScope.user.gender == false}">checked</c:if> >
-                                <label for="male">Male</label>
-                            
-                                <input type="radio" id="female" name="gender" value="female" value="female" <c:if test="${sessionScope.user.gender == true}">checked</c:if> >
-                                <label for="female">Female</label>
-                
-                            </div>
+                        <label>Gender</label>
+                        <div class="radio-btn">
+            
+                            <input type="radio" id="male" name="gender" value=True checked>
+                            <label for="male">Male</label>
+                        
+                            <input type="radio" id="female" name="gender" value=False 
+                            	<c:if test="${sessionScope.user.gender == false}">checked</c:if> />
+                            <label for="female">Female</label>
+            
                         </div>
+                    </div>
     
                         <div class="input-date">
                             <label for="birthdate">Birthdate</label>
@@ -194,8 +180,6 @@
                 </form>            
             </div>
         </div>
-
-		
 
         <div class="right-content">
             <div class="week-calendar">

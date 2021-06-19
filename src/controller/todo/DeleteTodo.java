@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.TodoDao;
-import model.Tag;
 import model.Todo;
 import model.User;
 
@@ -48,44 +47,46 @@ public class DeleteTodo extends HttpServlet {
 	private void deleteTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 		
-		/*
-		 * System.out.println(request.getParameter("tagidFilter")+ " tagid");
-		 * System.out.println(request.getParameter("dateeeee") + " week");
-		 */
-		
-		String from = request.getParameter("from").trim();
-		
-		System.out.println("From: ");
-		System.out.println(from);
-		
-		int id = Integer.parseInt(request.getParameter("id"));
 		User user = (User) session.getAttribute("user");
-		Todo todo = todoDao.getTodo(id);
-		if (todo.getUser().getId() == user.getId())
-		{
-			todoDao.deleteTodo(id);
-			if (from.equals("dashboard")) {
-				response.sendRedirect("listDashboard");
-			} else if (from.equals("tododay")) {
-				response.sendRedirect("listTodo");
-			} else if (from.equals("todoweek")) {
-				response.sendRedirect("listTodoThisWeek");
-			} else {
-				response.sendRedirect("listTodoThisMonth");
+		if(user!=null) {
+			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || 
+					request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {
+				try {
+					String from = request.getParameter("from").trim();
+					
+					int id = Integer.parseInt(request.getParameter("id"));
+					Todo todo = todoDao.getTodo(id);
+					if (todo.getUser().getId() == user.getId()) {
+						todoDao.deleteTodo(id);
+					
+						if (from.equals("dashboard")) {
+							response.sendRedirect("listDashboard");
+						} else if (from.equals("tododay")) {
+							response.sendRedirect("listTodo");
+						} else if (from.equals("todoweek")) {
+							response.sendRedirect("listTodoThisWeek");
+						} else {
+							response.sendRedirect("listTodoThisMonth");
+						}	
+					} else {
+						session.invalidate();
+						RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+						dispatcher.forward(request, response);
+					}
+					
+				} catch(Exception e) {
+					RequestDispatcher dispatcher;
+					dispatcher = request.getRequestDispatcher("error.jsp");
+					dispatcher.forward(request, response);
+				}
 			}
-		}
-		else
-		{
-			session.invalidate();
-			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+			
+		} else {
+			System.out.println("Nguoi dung null");
+			RequestDispatcher dispatcher;
+			dispatcher = request.getRequestDispatcher("index.jsp");
 			dispatcher.forward(request, response);
 		}
-		/* String type = request.getParameter("type"); */		
-		/* RequestDispatcher dispatcher; */
-		
-		
-		
-		
 	}
 
 }
