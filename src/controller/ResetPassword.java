@@ -74,8 +74,8 @@ public class ResetPassword extends HttpServlet {
 		}
 		
 		if (url.equals("")) {
-        	User user = userDao.existUser(email);
-        	if ( user != null ) {
+			User user = userDao.existUser(email);
+			if ( user != null ) {
         		// Hash password
 				String salt = PasswordUtils.generateSalt(20).get();
 				System.out.println("Salt ::: " + salt);
@@ -83,18 +83,18 @@ public class ResetPassword extends HttpServlet {
 				String passwordSecurity = PasswordUtils.hashPassword(password, salt).get();
 				System.out.println("Password Security ::: " + passwordSecurity);
 				
-        		userDao.resetPassword(email, passwordSecurity, salt);
-        		url="/reset-password-success.jsp";
-	            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
-	            dispatcher.forward(request, response);
-	            
-    		} else {
-    			System.out.println("Email ::: " + "(User)userDao.EmailExist(email)) == null");
-    			request.setAttribute("emailError", "* This email is not registered!");
-    			url="/reset-password.jsp"; 
-    		}
-        	
-        	RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+				userDao.resetPassword(email, passwordSecurity, salt);
+				url="/reset-password-success.jsp";
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
+				dispatcher.forward(request, response);
+				
+			} else {
+				System.out.println("Email ::: " + "(User)userDao.EmailExist(email)) == null");
+				request.setAttribute("emailError", "* This email is not registered!");
+				url="/reset-password.jsp"; 
+			}
+
+			RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 			dispatcher.forward(request, response);
         }
 		

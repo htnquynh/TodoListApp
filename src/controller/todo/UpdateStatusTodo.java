@@ -79,27 +79,32 @@ public class UpdateStatusTodo extends HttpServlet {
 				
 				int id = Integer.parseInt(request.getParameter("id"));
 				Todo td = todoDao.getTodo(id);
-		        System.out.println(td.toString());
-		        if(td.getDone() == false){
-		            td.setDone(true);
-		        }
-		        
-		        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-		        Date date = new Date();
-		        td.setDoneat(date);
-		        System.out.println(td.toString());
-		        todoDao.updateTodo(td);
-		        
-		        if (from.equals("dashboard")) {
-					response.sendRedirect("listDashboard");
-				} else if (from.equals("tododay")) {
-					response.sendRedirect("listTodo");
-				} else if (from.equals("todoweek")) {
-					response.sendRedirect("listTodoThisWeek");
+				if (td.getUser().getId()==user.getId()) {
+					System.out.println(td.toString());
+					if(td.getDone() == false){
+						td.setDone(true);
+					}
+					
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+					Date date = new Date();
+					td.setDoneat(date);
+					System.out.println(td.toString());
+					todoDao.updateTodo(td);
+					
+					if (from.equals("dashboard")) {
+						response.sendRedirect("listDashboard");
+					} else if (from.equals("tododay")) {
+						response.sendRedirect("listTodo");
+					} else if (from.equals("todoweek")) {
+						response.sendRedirect("listTodoThisWeek");
+					} else {
+						response.sendRedirect("listTodoThisMonth");
+					}
 				} else {
-					response.sendRedirect("listTodoThisMonth");
+					session.invalidate();
+					RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+					dispatcher.forward(request, response);
 				}
-		        
 			} else {
 				RequestDispatcher dispatcher;
 				dispatcher = request.getRequestDispatcher("error.jsp");

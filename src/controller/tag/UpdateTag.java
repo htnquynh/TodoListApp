@@ -22,7 +22,7 @@ import model.User;
 @WebServlet("/updateTag")
 public class UpdateTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private TagDao tagDao;
+	private TagDao tagDao = null;
 	HttpSession session = null;
 	
     public UpdateTag() {
@@ -60,52 +60,59 @@ public class UpdateTag extends HttpServlet {
 					String flag = "";
 					
 					int id = Integer.parseInt(request.getParameter("id"));
-					String tagname = StringEscapeUtils.escapeHtml4(request.getParameter("tagname").trim());
-					request.setAttribute("tagname", tagname);
-					System.out.println("Tagname ::: " + tagname);
-					
-					String regexName = "^[\\p{L}\\d]{1}[\\p{L}\\d .'\\-,]{0,49}$";
-					Pattern patternName = Pattern.compile(regexName);
-					
-					if (!patternName.matcher(tagname).matches())
-					{
-						System.out.println("Tagname ::: " + "!pattern.matcher(tagname).matches()");
-						request.setAttribute("tagnameError", "* Tag Name should start with a letter or number and contain only letters, numbers, spaces and characters: (.), (,), (-), (')");
-						flag="error";
-					}
-					
-					String color = StringEscapeUtils.escapeHtml4(request.getParameter("color").trim());
-					request.setAttribute("color", color);
-					System.out.println("Color ::: " + color);
-					
-					String regexColor = "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$";
-					Pattern patternColor = Pattern.compile(regexColor);
-					
-					if (!patternColor.matcher(color).matches()) {
-						System.out.println("Color ::: " + "!patternColor.matcher(color).matches()");
-						request.setAttribute("colorError", "* Color code should be in the form #RRGGBB");
-						flag="error";
-					}
-					
-					if (flag.equals("")) {
-						Tag tag = new Tag(id, tagname, color, user);
-						tagDao.updateTag(tag);
-					}
-					
-					if (from.equals("dashboard")) {
-						response.sendRedirect("listDashboard");
-					} else if (from.equals("tododay")) {
-						response.sendRedirect("listTodo");
-					} else if (from.equals("todoweek")) {
-						response.sendRedirect("listTodoThisWeek");
+
+					Tag tag = tagDao.getTag(id);
+					if (tag.getUser().getId() == user.getId()) {
+
+						String tagname = StringEscapeUtils.escapeHtml4(request.getParameter("tagname").trim());
+						request.setAttribute("tagname", tagname);
+						System.out.println("Tagname ::: " + tagname);
+						
+						String regexName = "^[\\p{L}\\d]{1}[\\p{L}\\d .'\\-,]{0,49}$";
+						Pattern patternName = Pattern.compile(regexName);
+						
+						if (!patternName.matcher(tagname).matches()) {
+							System.out.println("Tagname ::: " + "!pattern.matcher(tagname).matches()");
+							request.setAttribute("tagnameError", "* Tag Name should start with a letter or number and contain only letters, numbers, spaces and characters: (.), (,), (-), (')");
+							flag="error";
+						}
+						
+						String color = StringEscapeUtils.escapeHtml4(request.getParameter("color").trim());
+						request.setAttribute("color", color);
+						System.out.println("Color ::: " + color);
+						
+						String regexColor = "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$";
+						Pattern patternColor = Pattern.compile(regexColor);
+						
+						if (!patternColor.matcher(color).matches()) {
+							System.out.println("Color ::: " + "!patternColor.matcher(color).matches()");
+							request.setAttribute("colorError", "* Color code should be in the form #RRGGBB");
+							flag="error";
+						}
+						
+						if (flag.equals("")) {
+							Tag newTag = new Tag(id, tagname, color, user);
+							tagDao.updateTag(newTag);
+						}
+						
+						if (from.equals("dashboard")) {
+							response.sendRedirect("listDashboard");
+						} else if (from.equals("tododay")) {
+							response.sendRedirect("listTodo");
+						} else if (from.equals("todoweek")) {
+							response.sendRedirect("listTodoThisWeek");
+						} else {
+							response.sendRedirect("listTodoThisMonth");
+						}
 					} else {
-						response.sendRedirect("listTodoThisMonth");
-					}	
+						session.invalidate();
+						RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+						dispatcher.forward(request, response);
+					}
 				} catch (Exception e) {
 					RequestDispatcher dispatcher = request.getRequestDispatcher("error.jsp");
 					dispatcher.forward(request, response);
 				}
-				
 				
 			} else {
 				RequestDispatcher dispatcher;
@@ -114,11 +121,9 @@ public class UpdateTag extends HttpServlet {
 			}
 			
 		} else {
-			
 			System.out.println("Nguoi dung null");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 			dispatcher.forward(request, response);
 		}
-		
 	}
 }

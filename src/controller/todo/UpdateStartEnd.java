@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -79,24 +80,29 @@ public class UpdateStartEnd extends HttpServlet {
 				
 				System.out.println(startTime);
 				Todo td = todoDao.getTodo(id);
-		        System.out.println(td.toString());
-		        
-		        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-		        Date start=formatter.parse(startTime);
-		        Date date = new Date();
-		        td.setStart(start);
-		        td.setEnd(date);
-		        System.out.println(td.toString());
-		        todoDao.updateTodo(td);
-		        
-		        if (from.equals("dashboard")) {
-					response.sendRedirect("listDashboard");
-				} else if (from.equals("tododay")) {
-					response.sendRedirect("listTodo");
-				} else if (from.equals("todoweek")) {
-					response.sendRedirect("listTodoThisWeek");
+				System.out.println(td.toString());
+				if (td.getUser().getId()==user.getId()) {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+					Date start=formatter.parse(startTime);
+					Date date = new Date();
+					td.setStart(start);
+					td.setEnd(date);
+					System.out.println(td.toString());
+					todoDao.updateTodo(td);
+					
+					if (from.equals("dashboard")) {
+						response.sendRedirect("listDashboard");
+					} else if (from.equals("tododay")) {
+						response.sendRedirect("listTodo");
+					} else if (from.equals("todoweek")) {
+						response.sendRedirect("listTodoThisWeek");
+					} else {
+						response.sendRedirect("listTodoThisMonth");
+					}
 				} else {
-					response.sendRedirect("listTodoThisMonth");
+					session.invalidate();
+					RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+					dispatcher.forward(request, response);
 				}
 			} else {
 				RequestDispatcher dispatcher;
@@ -108,8 +114,6 @@ public class UpdateStartEnd extends HttpServlet {
 			RequestDispatcher dispatcher;
 			dispatcher = request.getRequestDispatcher("index.jsp");
 			dispatcher.forward(request, response);
-		}
-			
+		}		
 	}
-
 }

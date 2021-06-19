@@ -109,19 +109,23 @@ public class UpdateTodo extends HttpServlet {
 					if (flag.equals("")) {
 						
 						existingTodo.setUser(user);
-						todoDao.updateTodo(existingTodo);
+						if (tag.getUser().getId()==user.getId()&&existingTodo.getUser().getId()==user.getId()) {
+							todoDao.updateTodo(existingTodo);
 
-						if (from.equals("dashboard")) {
-							response.sendRedirect("listDashboard");
-						} else if (from.equals("tododay")) {
-							response.sendRedirect("listTodo");
-						} else if (from.equals("todoweek")) {
-							response.sendRedirect("listTodoThisWeek");
+							if (from.equals("dashboard")) {
+								response.sendRedirect("listDashboard");
+							} else if (from.equals("tododay")) {
+								response.sendRedirect("listTodo");
+							} else if (from.equals("todoweek")) {
+								response.sendRedirect("listTodoThisWeek");
+							} else {
+								response.sendRedirect("listTodoThisMonth");
+							}
 						} else {
-							response.sendRedirect("listTodoThisMonth");
+							session.invalidate();
+							RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+							dispatcher.forward(request, response);
 						}
-						
-						
 					} else {
 						request.setAttribute("existingTodo", existingTodo);
 						request.setAttribute("openFormEditTodo", "open");

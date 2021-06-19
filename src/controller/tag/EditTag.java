@@ -20,9 +20,9 @@ import model.User;
 @WebServlet("/editTag")
 public class EditTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	TagDao tagDao = null;
-	HttpSession session = null;
-	
+	private TagDao tagDao = null;
+    HttpSession session = null;
+    
     public EditTag() {
         super();
         tagDao = new TagDao();
@@ -53,23 +53,28 @@ public class EditTag extends HttpServlet {
 					int id = Integer.parseInt(request.getParameter("id"));
 					Tag existingTag = tagDao.getTag(id);
 					
-					request.setAttribute("existingTag", existingTag);
-					request.setAttribute("openFormEditTag", "open");
-					
-					RequestDispatcher dispatcher;
-					
-					if (from.equals("dashboard")) {
-						dispatcher = request.getRequestDispatcher("dashboard.jsp");
-					} else if (from.equals("tododay")) {
-						dispatcher = request.getRequestDispatcher("tododay.jsp");
-					} else if (from.equals("todoweek")) {
-						dispatcher = request.getRequestDispatcher("todoweek.jsp");
+					if (existingTag.getUser().getId() == user.getId()) {
+						request.setAttribute("existingTag", existingTag);
+						request.setAttribute("openFormEditTag", "open");
+						
+						RequestDispatcher dispatcher;
+						
+						if (from.equals("dashboard")) {
+							dispatcher = request.getRequestDispatcher("dashboard.jsp");
+						} else if (from.equals("tododay")) {
+							dispatcher = request.getRequestDispatcher("tododay.jsp");
+						} else if (from.equals("todoweek")) {
+							dispatcher = request.getRequestDispatcher("todoweek.jsp");
+						} else {
+							dispatcher = request.getRequestDispatcher("todomonth.jsp");
+						}
+						
+						dispatcher.forward(request, response);
 					} else {
-						dispatcher = request.getRequestDispatcher("todomonth.jsp");
+						session.invalidate();
+						RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+						dispatcher.forward(request, response);
 					}
-					
-					dispatcher.forward(request, response);
-					
 				} catch (Exception e) {
 					RequestDispatcher dispatcher;
 					dispatcher = request.getRequestDispatcher("error.jsp");

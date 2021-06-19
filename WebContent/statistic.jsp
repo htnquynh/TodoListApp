@@ -160,6 +160,8 @@
                             <input type="date" name="dateStatistic" class="input-date" id="date-for-statistic" value="<c:out value="${date}"/>">
                             <input type="submit" value="View Statistic" class="btn-submit">
                         </div>
+                                	<input type="hidden" name="CSRFToken" value="">
+                        
                     </form>
                 </div>
                 <div class="chart-daily-container">
@@ -187,6 +189,8 @@
                             <input type="week" name="weekStatistic" class="input-week" id="week-for-statistic" value="<c:out value="${week}"/>"/>
                             <input type="submit" value="View Statistic" class="btn-submit">
                         </div>
+                                	<input type="hidden" name="CSRFToken" value="">
+                        
                     </form>
                 </div>
                 <div class="chart-weekly-container">

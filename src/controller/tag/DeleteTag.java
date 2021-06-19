@@ -23,7 +23,7 @@ public class DeleteTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	TagDao tagDao = null;
 	HttpSession session = null;
-       
+    
     public DeleteTag() {
         super();
         tagDao = new TagDao();
@@ -56,18 +56,24 @@ public class DeleteTag extends HttpServlet {
 				String from = request.getParameter("from");
 				
 				int id = Integer.parseInt(request.getParameter("id"));
+				Tag tag = tagDao.getTag(id);
+				if (tag.getUser().getId() == user.getId()) {
+					tagDao.deleteTag(id);
 				
-				tagDao.deleteTag(id);
-				
-				if (from.equals("dashboard")) {
-					response.sendRedirect("listDashboard");
-				} else if (from.equals("tododay")) {
-					response.sendRedirect("listTodo");
-				} else if (from.equals("todoweek")) {
-					response.sendRedirect("listTodoThisWeek");
+					if (from.equals("dashboard")) {
+						response.sendRedirect("listDashboard");
+					} else if (from.equals("tododay")) {
+						response.sendRedirect("listTodo");
+					} else if (from.equals("todoweek")) {
+						response.sendRedirect("listTodoThisWeek");
+					} else {
+						response.sendRedirect("listTodoThisMonth");
+					}	
 				} else {
-					response.sendRedirect("listTodoThisMonth");
-				}	
+					session.invalidate();
+					RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+					dispatcher.forward(request, response);
+				}
 				
 			} else {
 				RequestDispatcher dispatcher;

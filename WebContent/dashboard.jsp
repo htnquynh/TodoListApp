@@ -280,14 +280,15 @@
 								    </div> -->
 								</div>
                     
-                       		</div>
-                       	</div>
+                            </div>
+                        </div>
 						<div class="mymodal-footer">
 							<!-- <a href="#" class="btn-on-mymodal">
 								Create
 							</a> -->
 							<input type="submit" value="Create" class="btn-submit-on-form">
 						</div>
+                        <input type="hidden" name="CSRFToken" value="">
 					</form>
 				</div>
                 
@@ -343,6 +344,8 @@
                         <div class="mymodal-footer">
                             <input type="submit" value="Create" class="btn-submit-on-form">
                         </div>
+                                	<input type="hidden" name="CSRFToken" value="">
+                        
                     </form>
                 </div>
             </div>
@@ -411,6 +414,8 @@
                         <div class="mymodal-footer">
                             <input type="submit" value="Filter" class="btn-submit-on-form">
                         </div>
+                        <input type="hidden" name="CSRFToken" value="">
+
                     </form>
                 </div>
             </div>
@@ -498,13 +503,13 @@
                                   		<p>Invalid input</p>
                                  	</div> -->
                                 </div>
-
+                                
                    			</div>
                        	</div>
                      	<div class="mymodal-footer">
                          	<input type="submit" value="Update" class="btn-submit-on-form">
                   		</div>
-
+                        <input type="hidden" name="CSRFToken" value="">
                  	</form>
              	</div>
             </div>
@@ -552,6 +557,8 @@
                         <div class="mymodal-footer">
                             <input type="submit" value="Update" class="btn-submit-on-form">
                         </div>
+                                	<input type="hidden" name="CSRFToken" value="">
+                        
                     </form>
                 </div>
             </div>

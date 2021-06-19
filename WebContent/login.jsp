@@ -127,7 +127,6 @@
 	String email = (String)request.getAttribute("email");
 	if (email == null) email = "";
 	String password =(String)request.getAttribute("password");
-	System.out.println("Emailllllll: " + password);
 	if (password == null) password = "";
 %>
 
@@ -142,7 +141,7 @@
     		<rect fill="none" height="16" width="16"/>
     		<path d="M9,19l1.41-1.41L5.83,13H22V11H5.83l4.59-4.59L9,5l-7,7L9,19z"/>
     	</svg>
-    	Sign Up
+		Sign Up
 		</a>
     </div>
 
@@ -178,9 +177,9 @@
             <div class="forget-password">
         		<a href="${pageContext.request.contextPath}/reset-password.jsp">Forget your password?</a>
         	</div>
+        	<input type="hidden" name="CSRFToken" value="">
         </form>
     </div>
-
     <script src="${pageContext.request.contextPath}/js/todoform.js"></script>
     <%-- <script src="${pageContext.request.contextPath}/js/signupmodal.js"></script> --%>
 

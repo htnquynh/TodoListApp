@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.TodoDao;
+import model.Todo;
 import model.User;
 
 @WebServlet("/deleteTodo")
@@ -19,7 +20,7 @@ public class DeleteTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TodoDao todoDao;
     HttpSession session = null;
-	
+
     public DeleteTodo() {
         super();
         todoDao = new TodoDao();
@@ -27,6 +28,7 @@ public class DeleteTodo extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession(true);
+
 		try {
 			deleteTodo(request, response);
 		} catch (SQLException e) {
@@ -53,18 +55,25 @@ public class DeleteTodo extends HttpServlet {
 					String from = request.getParameter("from").trim();
 					
 					int id = Integer.parseInt(request.getParameter("id"));
+					Todo todo = todoDao.getTodo(id);
+					if (todo.getUser().getId() == user.getId()) {
+						todoDao.deleteTodo(id);
 					
-					todoDao.deleteTodo(id);
-					
-					if (from.equals("dashboard")) {
-						response.sendRedirect("listDashboard");
-					} else if (from.equals("tododay")) {
-						response.sendRedirect("listTodo");
-					} else if (from.equals("todoweek")) {
-						response.sendRedirect("listTodoThisWeek");
+						if (from.equals("dashboard")) {
+							response.sendRedirect("listDashboard");
+						} else if (from.equals("tododay")) {
+							response.sendRedirect("listTodo");
+						} else if (from.equals("todoweek")) {
+							response.sendRedirect("listTodoThisWeek");
+						} else {
+							response.sendRedirect("listTodoThisMonth");
+						}	
 					} else {
-						response.sendRedirect("listTodoThisMonth");
-					}	
+						session.invalidate();
+						RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+						dispatcher.forward(request, response);
+					}
+					
 				} catch(Exception e) {
 					RequestDispatcher dispatcher;
 					dispatcher = request.getRequestDispatcher("error.jsp");

@@ -122,7 +122,7 @@ public class Signup extends HttpServlet {
 			request.setAttribute("birthdateError", "* Invalid date!");
 			url="/signup.jsp";
 		}
-				
+
 		if (url=="") {
 			try {
 				
@@ -157,5 +157,4 @@ public class Signup extends HttpServlet {
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
 		dispatcher.forward(request, response);
 	}
-
 }
