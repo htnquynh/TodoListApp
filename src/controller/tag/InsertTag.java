@@ -22,7 +22,6 @@ import model.User;
 @WebServlet("/insertTag")
 public class InsertTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
 	private TagDao tagDao;
 	HttpSession session = null;
 	
@@ -53,6 +52,7 @@ public class InsertTag extends HttpServlet {
 	
 	public void insertTag(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
+
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
 			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {

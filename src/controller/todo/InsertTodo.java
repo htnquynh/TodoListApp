@@ -56,7 +56,6 @@ public class InsertTodo extends HttpServlet {
 	}
 	
 	private void insertTodo(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException, ParseException {
-		
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
 			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || 
@@ -157,7 +156,6 @@ public class InsertTodo extends HttpServlet {
 					dispatcher = request.getRequestDispatcher("error.jsp");
 					dispatcher.forward(request, response);
 				}
-				
 			} else {
 				RequestDispatcher dispatcher;
 				dispatcher = request.getRequestDispatcher("error.jsp");

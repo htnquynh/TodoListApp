@@ -30,7 +30,7 @@ public class UpdateStatusTodo extends HttpServlet {
 	private TodoDao todoDao;
 	private TagDao tagDao;
 	HttpSession session = null;
-       
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -69,7 +69,7 @@ public class UpdateStatusTodo extends HttpServlet {
 	}
 	private void updateStatusTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
+
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
 			
@@ -105,7 +105,6 @@ public class UpdateStatusTodo extends HttpServlet {
 				dispatcher = request.getRequestDispatcher("error.jsp");
 				dispatcher.forward(request, response);
 			}
-			
 		} else {
 			System.out.println("Nguoi dung null");
 			RequestDispatcher dispatcher;

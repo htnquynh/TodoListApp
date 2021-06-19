@@ -27,13 +27,13 @@ import model.User;
 public class ListTodoThisMonth extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
-    HttpSession session = null;
+    
     public ListTodoThisMonth() {
         super();
         userDao = new UserDao();
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(true);
+		
 		
 		listTodoThisMonth(request, response);
 	}
@@ -42,7 +42,7 @@ public class ListTodoThisMonth extends HttpServlet {
 	}
 	private void listTodoThisMonth(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+		HttpSession session = request.getSession(false);
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
 			String now= LocalDate.now().toString();

@@ -51,6 +51,7 @@ public class UpdateTag extends HttpServlet {
 
 	private void updateTag(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
+
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
 			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {

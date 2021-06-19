@@ -58,7 +58,6 @@ public class UpdateTodo extends HttpServlet {
 	
 	private void updateTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
 			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || 

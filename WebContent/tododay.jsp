@@ -276,8 +276,6 @@
 	                                            <p>Invalid input</p>
 	                                        </div> -->
 	                                    </div>
-	                                    
-	
 	                                </div>
 	                            </div>
 	                            <div class="mymodal-footer">
@@ -354,7 +352,6 @@
 			<c:if test="${openFormEditTodo == null}">
 			<div class="mymodal" id="editTodoModal">
 			</c:if>
-			
             	<!-- div class="mymodal" id="addTodoModal"> -->
                	<div class="mymodal-content">
                 	<form action="${pageContext.request.contextPath}/updateTodo" method="post" >
@@ -862,7 +859,6 @@
             
         </div>
     </div>
-
 
     <script src="${pageContext.request.contextPath}/js/todoform.js"></script>
     <script src="${pageContext.request.contextPath}/js/mymodal.js"></script>

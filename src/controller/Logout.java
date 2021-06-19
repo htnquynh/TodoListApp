@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/logout")
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	HttpSession session = null;
 	public Logout() {
         super();
         // TODO Auto-generated constructor stub
@@ -26,8 +25,11 @@ public class Logout extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(true);
-		session.invalidate();
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
 	}

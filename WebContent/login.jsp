@@ -171,7 +171,6 @@
                       </div>
                 </div>
                 
-
             </div>
 
             <input type="submit" value="Login" class="btn-submit-on-form">
@@ -180,12 +179,7 @@
         		<a href="${pageContext.request.contextPath}/reset-password.jsp">Forget your password?</a>
         	</div>
         </form>
-        
-        
-        
     </div>
-    
-    
 
     <script src="${pageContext.request.contextPath}/js/todoform.js"></script>
     <%-- <script src="${pageContext.request.contextPath}/js/signupmodal.js"></script> --%>

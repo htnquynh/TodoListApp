@@ -25,7 +25,7 @@ import model.User;
 public class ListDashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
-    HttpSession session = null;
+	HttpSession session = null;
 
     public ListDashboard() {
         super();
@@ -54,6 +54,7 @@ public class ListDashboard extends HttpServlet {
 	
 	private void listDashboard(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, ParseException {
+
 		User user = (User)session.getAttribute("user");
 		if(user!=null) {
 			String nowd = LocalDate.now().toString();
@@ -66,6 +67,7 @@ public class ListDashboard extends HttpServlet {
 			try {
 				Date today = df.parse(nowd);
 				for( int i=0; i< listTodo.size();i++) 
+
 				{
 					if (listTodo.get(i).getDate().compareTo(today)==0)
 					{

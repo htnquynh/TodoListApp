@@ -162,7 +162,7 @@
                             <label for="male">Male</label>
                         
                             <input type="radio" id="female" name="gender" value=False 
-                            	<c:if test="${sessionScope.user.gender == true}">checked</c:if> />
+                            	<c:if test="${sessionScope.user.gender == false}">checked</c:if> />
                             <label for="female">Female</label>
             
                         </div>
@@ -178,8 +178,6 @@
                 </form>            
             </div>
         </div>
-
-		
 
         <div class="right-content">
             <div class="week-calendar">

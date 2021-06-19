@@ -29,8 +29,8 @@ import model.User;
 public class FilterTodo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UserDao userDao = null;
-    HttpSession session = null;
-       
+	HttpSession session = null;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -43,9 +43,7 @@ public class FilterTodo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		session = request.getSession(true);
-		
 		filterTodo(request, response);
 	}
 
@@ -66,6 +64,7 @@ public class FilterTodo extends HttpServlet {
 			{
 				tagidFilter = -1;
 			}
+
 			String prioFilter=request.getParameter("prioFilter").trim();
 			String stateFilter=request.getParameter("stateFilter").trim();
 			String type= request.getParameter("type");
@@ -206,7 +205,6 @@ public class FilterTodo extends HttpServlet {
 						}
 					}
 				}
-
 				else if(type.equals("week"))
 				{
 					if(week.equals("")==false)

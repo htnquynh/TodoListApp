@@ -28,7 +28,7 @@ public class UpdateStartEnd extends HttpServlet {
 	private TodoDao todoDao;
 	private TagDao tagDao;
 	HttpSession session = null;
-       
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -67,7 +67,6 @@ public class UpdateStartEnd extends HttpServlet {
 	}
 	private void updateEndTimeTodo(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
-		
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
 			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || 

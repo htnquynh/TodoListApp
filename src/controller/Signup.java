@@ -143,7 +143,7 @@ public class Signup extends HttpServlet {
 				Tag defaultTag = new Tag(0, "Other", "#cccccc", newUser);
 				tagDao.saveTag(defaultTag);
 					
-				url="/login.jsp";
+				url="/signup-success.jsp";
 				
 				System.out.println("New User ::: " + "userDao.saveUser(newUser);");
 						
