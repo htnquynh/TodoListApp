@@ -204,7 +204,7 @@
                 <!-- <div class="mymodal" id="addTodoModal"> -->
                     
                         <div class="mymodal-content">
-                        <form action="${pageContext.request.contextPath}/insertTodo" method="GET" >
+                        <form action="${pageContext.request.contextPath}/insertTodo" method="post" >
                             <div class="mymodal-header">
                                 <h3>Create new todo</h3>
                                 <a class="btn-close-mymodal" id="btn-close-addTodoModal">
@@ -222,7 +222,7 @@
                                 	
                                     <div class="input-text">
                                         <label for="title">Title</label>
-                                        <input type="text" maxlength="255" name="title" value = "<c:out value='${title}'/>" >
+                                        <input type="text" maxlength="100" name="title" value = "<c:out value='${title}'/>" >
                                         
                                         <div class="input-error">
                                             <p><c:out value="${titleError}"/></p>
@@ -333,7 +333,7 @@
                             	
                                 <div class="input-text">
                                     <label for="tagname">Tag:</label>
-                                    <input type="text" maxlength="255" name="tagname" value = "<c:out value='${tagname}'/>" required>
+                                    <input type="text" maxlength="50" name="tagname" value = "<c:out value='${tagname}'/>" required>
                                 </div>
                 
                                 <div class="input-color">
@@ -360,7 +360,7 @@
             <!-- div class="mymodal" id="addTodoModal"> -->
                 
                     <div class="mymodal-content">
-                        <form action="${pageContext.request.contextPath}/updateTodo" method="GET" >
+                        <form action="${pageContext.request.contextPath}/updateTodo" method="post" >
                             <div class="mymodal-header">
                                 <h3>Update todo</h3>
                                 <a class="btn-close-mymodal" id="btn-close-editTodoModal">
@@ -380,7 +380,7 @@
                                 	
                                     <div class="input-text">
                                         <label for="title">Title</label>
-                                        <input type="text" maxlength="255" name="title" value = "<c:out value='${existingTodo.title}'/>" >
+                                        <input type="text" maxlength="100" name="title" value = "<c:out value='${existingTodo.title}'/>" >
                                         
                                         <div class="input-error">
                                             <p><c:out value="${titleError}"/></p>
@@ -480,7 +480,7 @@
                                 
                                 <div class="input-text">
                                     <label for="tagname">Tag:</label>
-                                    <input type="text" maxlength="255" name="tagname" value = "<c:out value='${existingTag.tagname}'/>" required>
+                                    <input type="text" maxlength="50" name="tagname" value = "<c:out value='${existingTag.tagname}'/>" required>
                                 </div>
                 
                                 <div class="input-color">

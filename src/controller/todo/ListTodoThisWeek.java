@@ -46,7 +46,6 @@ public class ListTodoThisWeek extends HttpServlet {
 	private void listTodoThisWeek(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
 			String now= LocalDate.now().toString();
@@ -69,29 +68,22 @@ public class ListTodoThisWeek extends HttpServlet {
 			Date datestart =calendar.getTime();
 			calendar.add(Calendar.DATE, 6);
 			Date dateend = calendar.getTime();
-			System.out.println(datestart+" ngày bắt đầu");
-			System.out.println(dateend+" ngày kết thúc");
-			for( int i=0; i< listTodo.size();i++) 
-			{
-				if (listTodo.get(i).getDate().compareTo(datestart)>=0&&listTodo.get(i).getDate().compareTo(dateend)<=0)
-				{
+			for( int i=0; i< listTodo.size(); i++) {
+				if (listTodo.get(i).getDate().compareTo(datestart)>=0&&listTodo.get(i).getDate().compareTo(dateend)<=0) {
 					result.add(listTodo.get(i));
 				}
 			}
+			
 			session.setAttribute("listTodo", result); 
 			session.setAttribute("listTag", listTag);
 			session.setAttribute("listTodoTotal", listTodo);
 			
-			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("todoweek.jsp");
 			dispatcher.forward(request, response);
-		}else {
+		} else {
 			System.out.println("Nguoi dung null");
-			
 			RequestDispatcher dispatcher;
-			
 			dispatcher = request.getRequestDispatcher("index.jsp");
-			
 			dispatcher.forward(request, response);
 		}
 	}

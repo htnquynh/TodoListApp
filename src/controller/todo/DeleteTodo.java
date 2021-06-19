@@ -47,19 +47,14 @@ public class DeleteTodo extends HttpServlet {
 		
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
-			if(request.getParameter("from").length()<10) {
+			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || 
+					request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {
 				try {
 					String from = request.getParameter("from").trim();
 					
-					System.out.println("From: ");
-					System.out.println(from);
 					int id = Integer.parseInt(request.getParameter("id"));
 					
-					/* String type = request.getParameter("type"); */
-					
 					todoDao.deleteTodo(id);
-					
-					/* RequestDispatcher dispatcher; */
 					
 					if (from.equals("dashboard")) {
 						response.sendRedirect("listDashboard");
@@ -70,22 +65,17 @@ public class DeleteTodo extends HttpServlet {
 					} else {
 						response.sendRedirect("listTodoThisMonth");
 					}	
-				}catch(Exception e) {
+				} catch(Exception e) {
 					RequestDispatcher dispatcher;
-					
 					dispatcher = request.getRequestDispatcher("error.jsp");
-					
 					dispatcher.forward(request, response);
 				}
 			}
 			
-		}else {
+		} else {
 			System.out.println("Nguoi dung null");
-			
 			RequestDispatcher dispatcher;
-			
 			dispatcher = request.getRequestDispatcher("index.jsp");
-			
 			dispatcher.forward(request, response);
 		}
 	}

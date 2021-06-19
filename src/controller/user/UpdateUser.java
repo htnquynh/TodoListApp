@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import dao.UserDao;
 import model.User;
 
@@ -55,47 +57,63 @@ public class UpdateUser extends HttpServlet {
 			throws SQLException, ServletException, IOException, ParseException {
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
-			String email = request.getParameter("email").trim();
-			String password = request.getParameter("password").trim();
-			String fullname = request.getParameter("fullname").trim();
-			String gender = request.getParameter("gender");
+			String url = "";
+			//String email = request.getParameter("email").trim();
+			//String password = request.getParameter("password").trim();
 			
-			String birthdate_str = request.getParameter("birthdate");
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			Date birthdate = df.parse(birthdate_str);
+			String fullname = StringEscapeUtils.escapeHtml4(request.getParameter("fullname").trim());
+			request.setAttribute("fullname", fullname);
+			System.out.println("Fullname ::: " + fullname);
 			
-	        Pattern emailPattern = Pattern.compile("\\w+@\\w+(.\\w+)*");
-	        Matcher emailMatcher = emailPattern.matcher(email);
-	        if (!emailMatcher.matches()) {
-	        	request.setAttribute("email", email);
-	            request.setAttribute("emailError", " is not an email address!");
-	        } else {
-	    		user.setEmail(email);
-	    		user.setPassword(password);
-	    		user.setFullname(fullname);
-	    		
-	    		
-	    		
-	    		if(gender.equals("male")) {
-	    			user.setGender(false);	// false = 0 --> Male
-	    		} else {
-	    			user.setGender(true);	// true = 1 --> Female
-	    		}
-	    		
-	    		user.setBirthdate(birthdate);
-	    		userDao.updateUser(user);
+			boolean gender = Boolean.parseBoolean(StringEscapeUtils.escapeHtml4(request.getParameter("gender").trim()));
+			request.setAttribute("gender", gender);
+			System.out.println("Gender ::: " + gender);
+			
+			String birthdate_str = StringEscapeUtils.escapeHtml4(request.getParameter("birthdate").trim());
+			request.setAttribute("birthdate_str", birthdate_str);
+			System.out.println("Birthdate ::: " + birthdate_str);
+			
+			String regexName = "^[\\p{L}\\d]{1}[\\p{L}\\d .'\\-,]{0,49}$";
+			Pattern patternName = Pattern.compile(regexName);
+			
+			if (!patternName.matcher(fullname).matches())
+			{
+				System.out.println("Name ::: " + "!patternName.matcher(fullname).matches()");
+				request.setAttribute("fullnameError", "* Name should start with a letter or number and contain only letters, numbers, spaces and characters: (.), (,), (-), (')");
+				url="/profile.jsp";
+			}
+			
+			if (birthdate_str.equals("")) {
+				System.out.println("Birthdate ::: " + "birthdate_str.equals(\"\")");
+				request.setAttribute("birthdateError", "* Invalid date!");
+				url="/profile.jsp";
+			}
+			
+			if (url=="") {
+				user.setFullname(fullname);
+				user.setGender(gender);
+				
+				try {
+					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					Date birthdate = df.parse(birthdate_str);
+					user.setBirthdate(birthdate);
+				} catch (Exception e) {
+					//
+				}
+				
+				userDao.updateUser(user);
 	    		session.setAttribute("user", userDao.getUser(user.getId()));
-	        }
+				
+			}
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
 			dispatcher.forward(request, response);
-		}else {
+			
+		} else {
 			System.out.println("Nguoi dung null");
 			
 			RequestDispatcher dispatcher;
-			
 			dispatcher = request.getRequestDispatcher("index.jsp");
-			
 			dispatcher.forward(request, response);
 		}
 	}

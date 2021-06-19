@@ -83,7 +83,6 @@ public class UserDao {
 			}
 			
 			transaction.commit();
-			System.out.println("Tran da commit");
 			
 		} catch (Exception e) {
 			if (transaction != null) {
@@ -92,7 +91,6 @@ public class UserDao {
 			e.printStackTrace();
 		} finally {
 			session.close();
-			System.out.println("Session da close");
 		}
 		
 		return null;
@@ -126,14 +124,14 @@ public class UserDao {
 		return null;
 	}
 	
-	public void resetPassword(String email, String password) {
+	public void resetPassword(String email, String password, String salt) {
 		Transaction transaction = null;
-		String query = "update User set password = :password where email = :email";
+		String query = "update User set password = :password, salt = :salt where email = :email";
 		
 		try {
 			session = HibernateUtils.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
-			session.createQuery(query).setParameter("password", password).setParameter("email", email).executeUpdate();
+			session.createQuery(query).setParameter("password", password).setParameter("salt", salt).setParameter("email", email).executeUpdate();
 			transaction.commit();
 			
 		} catch (Exception e) {

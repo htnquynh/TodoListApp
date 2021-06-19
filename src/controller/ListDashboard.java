@@ -32,7 +32,6 @@ public class ListDashboard extends HttpServlet {
         userDao = new UserDao();
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession(true);
 		try {
@@ -49,16 +48,13 @@ public class ListDashboard extends HttpServlet {
 		}
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		doGet(request, response);
 	}
 	
 	private void listDashboard(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, ParseException {
-		
-		User user = (User) session.getAttribute("user");
+		User user = (User)session.getAttribute("user");
 		if(user!=null) {
 			String nowd = LocalDate.now().toString();
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -83,11 +79,10 @@ public class ListDashboard extends HttpServlet {
 			session.setAttribute("listTodo", result); 
 			session.setAttribute("listTag", listTag);
 			session.setAttribute("listTodoTotal", listTodo);
-			 
 
 			RequestDispatcher dispatcher = request.getRequestDispatcher("dashboard.jsp");
 			dispatcher.forward(request, response);
-		}else {
+		} else {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 			dispatcher.forward(request, response);
 		}

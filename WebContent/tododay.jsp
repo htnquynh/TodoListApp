@@ -56,7 +56,6 @@
 	%>
 
     <div class="main-container">
-
         <div class="navbar-container">
             <div class="navbar">
                 <div class="nav-logo">
@@ -186,8 +185,8 @@
             </div>
 
             <div class="buttons-on-right">
+            	<!-- Button: Add new todo -->
                 <a id="btn-open-addTodoModal" class="btn-open-mymodal">
-                
                     <svg width="16" height="16" viewBox='0 0 16 16' >
                         <line x1=1 y1=8 x2=14 y2=8 shape-rendering="crispEdges" stroke-width="1" stroke="#ffffff"/>
                         <line x1=8 y1=1 x2=8 y2=14 shape-rendering="crispEdges" stroke-width="1" stroke="#ffffff"/>
@@ -195,109 +194,104 @@
                     Add todo
                 </a>
                 
+                <!-- Form: Add new todo -->
                 <c:if test="${openFormAddTodo != null}">
-						<div class="mymodal" id="addTodoModal" style="display: flex;">
+				<div class="mymodal" id="addTodoModal" style="display: flex;">
 				</c:if>
 				
 				<c:if test="${openFormAddTodo == null}">
-						<div class="mymodal" id="addTodoModal">
+				<div class="mymodal" id="addTodoModal">
 				</c:if>
 				
-                <!-- <div class="mymodal" id="addTodoModal"> -->
-                    
-                        <div class="mymodal-content">
-                        <form action="${pageContext.request.contextPath}/insertTodo" method="GET" >
-                            <div class="mymodal-header">
-                                <h3>Create new todo</h3>
-                                <a class="btn-close-mymodal" id="btn-close-addTodoModal">
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                        </svg>
-                                    </span>
-                                </a>
-                            </div>
-                            <div class="mymodal-body">
-                                <div class="form-container">
-                                
-                                	<input type="hidden" name="from" value = "tododay" >
-                                	
-                                    <div class="input-text">
-                                        <label for="title">Title</label>
-                                        <input type="text" maxlength="255" name="title" value = "<c:out value='${title}'/>" >
-                                        
-                                        <div class="input-error">
-                                            <p><c:out value="${titleError}"/></p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="input-date">
-                                        <label for="date">Date</label>
-                                        <input type="date" name="date" value = "${date}">
-
-                                        <!-- <div class="input-error">
-                                            <p>Invalid input</p>
-                                        </div> -->
-                                    </div>
-                                    
-                                    <div class="input-select">
-	                                    <label for="priority">Priority</label>
-	                                    <select name="priority">
-	                                        <option value="High" <c:if test="${priority == 'High'}">selected</c:if> >High</option>
-	                                        <option value="Medium" <c:if test="${priority == 'Medium'}">selected</c:if> >Medium</option>
-	                                        <option value="Low" <c:if test="${priority == 'Low'}">selected</c:if> >Low</option>
-	                                    </select>
+                	<!-- <div class="mymodal" id="addTodoModal"> -->
+	                <div class="mymodal-content">
+	                	<form action="${pageContext.request.contextPath}/insertTodo" method="post" >
+	                            <div class="mymodal-header">
+	                                <h3>Create new todo</h3>
+	                                <a class="btn-close-mymodal" id="btn-close-addTodoModal">
+	                                    <span>
+	                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+	                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+	                                        </svg>
+	                                    </span>
+	                                </a>
+	                            </div>
+	                            <div class="mymodal-body">
+	                                <div class="form-container">
+	                                	<input type="hidden" name="from" value = "tododay" >
+	                                    <div class="input-text">
+	                                        <label for="title">Title</label>
+	                                        <input type="text" maxlength="100" name="title" value = "<c:out value='${title}'/>" >
+	                                        <div class="input-error">
+	                                            <p><c:out value="${titleError}"/></p>
+	                                        </div>
+	                                    </div>
+	                                    
+	                                    <div class="input-date">
+	                                        <label for="date">Date</label>
+	                                        <input type="date" name="date" value = "${date}">
+	                                        <!-- <div class="input-error">
+	                                            <p>Invalid input</p>
+	                                        </div> -->
+	                                    </div>
+	                                    
+	                                    <div class="input-select">
+		                                    <label for="priority">Priority</label>
+		                                    <select name="priority">
+		                                        <option value="High" <c:if test="${priority == 'High'}">selected</c:if> >High</option>
+		                                        <option value="Medium" <c:if test="${priority == 'Medium'}">selected</c:if> >Medium</option>
+		                                        <option value="Low" <c:if test="${priority == 'Low'}">selected</c:if> >Low</option>
+		                                    </select>
+		                                </div>
+	                    
+	                                    <div class="input-select">
+	                                        <label for="tagid">Tag</label>
+	                                        <select name="tagid">
+	                                        	<c:forEach var="tag" items="${sessionScope.listTag}">
+	                                            	<option value="${tag.id}" 
+		                                            	<c:if test="${tag.id == tagid}">selected</c:if> >
+		                                            	<c:out value="${tag.tagname}"></c:out>
+	                                            	</option>
+	                                        	</c:forEach>
+	                                        </select>
+											<!-- <div class="input-error">
+	                                            <p>Invalid input</p>
+	                                        </div> -->
+	                                    </div>
+	                    
+	                                    <div class="input-time">
+	                                        <label for="deadline">Deadline</label>
+	                                        <input type="time" name="deadline">
+	
+	                                        <!-- <div class="input-error">
+	                                            <p>Invalid input</p>
+	                                        </div> -->
+	                                    </div>
+	                                    
+	                                    <div class="input-time">
+	                                        <label for="remindat">Remind at</label>
+	                                        <input type="time" name="remindat">
+	
+	                                        <!-- <div class="input-error">
+	                                            <p>Invalid input</p>
+	                                        </div> -->
+	                                    </div>
+	                                    
+	
 	                                </div>
-                    
-                                    <div class="input-select">
-                                        <label for="tagid">Tag</label>
-                                        <select name="tagid">
-                                        <c:forEach var="tag" items="${sessionScope.listTag}">
-                                            <option value="${tag.id}" 
-	                                            <c:if test="${tag.id == tagid}">selected</c:if> >
-	                                            <c:out value="${tag.tagname}"></c:out>
-                                            </option>
-                                        </c:forEach>
-                                        </select>
-
-                                        <!-- <div class="input-error">
-                                            <p>Invalid input</p>
-                                        </div> -->
-                                    </div>
-                    
-                                    <div class="input-time">
-                                        <label for="deadline">Deadline</label>
-                                        <input type="time" name="deadline">
-
-                                        <!-- <div class="input-error">
-                                            <p>Invalid input</p>
-                                        </div> -->
-                                    </div>
-                                    
-                                    <div class="input-time">
-                                        <label for="remindat">Remind at</label>
-                                        <input type="time" name="remindat">
-
-                                        <!-- <div class="input-error">
-                                            <p>Invalid input</p>
-                                        </div> -->
-                                    </div>
-                                    
-
-                                </div>
-                            </div>
-                            <div class="mymodal-footer">
-                                <!-- <a href="#" class="btn-on-mymodal">
-                                    Create
-                                </a> -->
-                                <input type="submit" value="Create" class="btn-submit-on-form">
-                            </div>
-
-                        </form>
-                    </div>
-                    
-                </div>
-    
+	                            </div>
+	                            <div class="mymodal-footer">
+	                                <!-- <a href="#" class="btn-on-mymodal">
+	                                    Create
+	                                </a> -->
+	                                <input type="submit" value="Create" class="btn-submit-on-form">
+	                            </div>
+	                        </form>
+	               	</div>   
+				</div>
+				<!-- End Form: Add new todo -->
+				
+				<!-- Button: Add new tag-->
                 <a id="btn-open-addTagModal" class="btn-open-mymodal" >
                     <svg width="16" height="16" viewBox='0 0 16 16' >
                         <line x1=1 y1=8 x2=14 y2=8 shape-rendering="crispEdges" stroke-width="1" stroke="#ffffff"/>
@@ -306,165 +300,155 @@
                     Add tag
                 </a>
                 
+                <!-- Form: Add new tag -->
                 <c:if test="${openFormAddTag != null}">
-						<div class="mymodal" id="addTagModal" style="display: flex;">
-						
+				<div class="mymodal" id="addTagModal" style="display: flex;">	
 				</c:if>
 				
 				<c:if test="${openFormAddTag == null}">
-						<div class="mymodal" id="addTagModal">
+				<div class="mymodal" id="addTagModal">
 				</c:if>
 					
-	            <!-- <div class="mymodal" id="addTagModal"> -->
-    
+	            	<!-- <div class="mymodal" id="addTagModal"> -->
                     <div class="mymodal-content">
-                
-                    <form action="${pageContext.request.contextPath}/insertTag" method="post" >
-                        <div class="mymodal-header">
-                            <h3>Create new tag</h3>
-                            <a class="btn-close-mymodal" id="btn-close-addTagModal">
-                                <span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                    </svg>
-                                </span>
-                            </a>
-                        </div>
-                        <div class="mymodal-body">
-                            <div class="form-container">
-                            
-                            	<input type="hidden" name="from" value = "tododay" >
-                            	
-                                <div class="input-text">
-                                    <label for="tagname">Tag:</label>
-                                    <input type="text" maxlength="255" name="tagname" value = "<c:out value='${tagname}'/>" required>
-                                </div>
-                
-                                <div class="input-color">
-                                    <label for="color">Color</label>
-                                    <input type="color" maxlength="7" name="color" value = "<c:out value='${color}'/>" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mymodal-footer">
-                            <input type="submit" value="Create" class="btn-submit-on-form">
-                        </div>
-                    </form>
+	                    <form action="${pageContext.request.contextPath}/insertTag" method="post" >
+	                        <div class="mymodal-header">
+	                            <h3>Create new tag</h3>
+	                            <a class="btn-close-mymodal" id="btn-close-addTagModal">
+	                                <span>
+	                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+	                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+	                                    </svg>
+	                                </span>
+	                            </a>
+	                        </div>
+	                        <div class="mymodal-body">
+	                            <div class="form-container">
+	                            	<input type="hidden" name="from" value = "tododay" >
+	                            	
+	                                <div class="input-text">
+	                                    <label for="tagname">Tag:</label>
+	                                    <input type="text" maxlength="50" name="tagname" value = "<c:out value='${tagname}'/>" required>
+	                                </div>
+	                
+	                                <div class="input-color">
+	                                    <label for="color">Color</label>
+	                                    <input type="color" maxlength="7" name="color" value = "<c:out value='${color}'/>" >
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="mymodal-footer">
+	                            <input type="submit" value="Create" class="btn-submit-on-form">
+	                        </div>
+	                    </form>
+                	</div>
                 </div>
-                </div>
+                <!-- End Form: Add new tag -->
             </div>
+            
+            <!-- Form: Edit todo -->
             <c:if test="${openFormEditTodo != null}">
-					<div class="mymodal" id="editTodoModal" style="display: flex;" >
+			<div class="mymodal" id="editTodoModal" style="display: flex;" >
 			</c:if>
 			
 			<c:if test="${openFormEditTodo == null}">
-					<div class="mymodal" id="editTodoModal">
+			<div class="mymodal" id="editTodoModal">
 			</c:if>
 			
-            <!-- div class="mymodal" id="addTodoModal"> -->
-                
-                    <div class="mymodal-content">
-                        <form action="${pageContext.request.contextPath}/updateTodo" method="GET" >
-                            <div class="mymodal-header">
-                                <h3>Update todo</h3>
-                                <a class="btn-close-mymodal" id="btn-close-editTodoModal">
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                        </svg>
-                                    </span>
-                                </a>
-                            </div>
-                            
-                            <div class="mymodal-body">
-                                <div class="form-container">
-                                
-                                	<input type="hidden" name="id" value = "<c:out value='${existingTodo.id}'/>" >
-                                	<input type="hidden" name="from" value="tododay" >
+            	<!-- div class="mymodal" id="addTodoModal"> -->
+               	<div class="mymodal-content">
+                	<form action="${pageContext.request.contextPath}/updateTodo" method="post" >
+                		<div class="mymodal-header">
+                        	<h3>Update todo</h3>
+                        	<a class="btn-close-mymodal" id="btn-close-editTodoModal">
+                        		<span>
+                             		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                              			<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                  	</svg>
+                            	</span>
+                         	</a>
+                     	</div>
+                       	<div class="mymodal-body">
+                      		<div class="form-container">
+		                   		<input type="hidden" name="id" value = "<c:out value='${existingTodo.id}'/>" >
+                             	<input type="hidden" name="from" value="tododay" >
                                 	
-                                    <div class="input-text">
-                                        <label for="title">Title</label>
-                                        <input type="text" maxlength="255" name="title" value = "<c:out value='${existingTodo.title}'/>" >
-                                        
-                                        <div class="input-error">
-                                            <p><c:out value="${titleError}"/></p>
-                                        </div>
+                               	<div class="input-text">
+                                	<label for="title">Title</label>
+                               		<input type="text" maxlength="100" name="title" value = "<c:out value='${existingTodo.title}'/>" >
+                                   	<div class="input-error">
+                                   		<p><c:out value="${titleError}"/></p>
                                     </div>
-                                    
+                               	</div>
                     
-                                    <div class="input-date">
-                                        <label for="date">Date</label>
-                                        <input type="date" name="date" value = "<c:out value='${existingTodo.date}'/>">
-
-                                        <!-- <div class="input-error">
-                                            <p>Invalid input</p>
-                                        </div> -->
-                                    </div>
+                              	<div class="input-date">
+                                  	<label for="date">Date</label>
+                                	<input type="date" name="date" value = "<c:out value='${existingTodo.date}'/>">
+                                  	<!-- <div class="input-error">
+                                   		<p>Invalid input</p>
+                                   	</div> -->
+                              	</div>
                                     
-                                    <div class="input-select">
-	                                    <label for="priority">Priority</label>
-	                                    <select name="priority">
-	                                        <option value="High" <c:if test="${existingTodo.priority == 'High'}">selected</c:if> >High</option>
-	                                        <option value="Medium" <c:if test="${existingTodo.priority == 'Medium'}">selected</c:if> >Medium</option>
-	                                        <option value="Low" <c:if test="${existingTodo.priority == 'Low'}">selected</c:if> >Low</option>
-	                                    </select>
-	                                </div>
+                              	<div class="input-select">
+	                            	<label for="priority">Priority</label>
+	                               	<select name="priority">
+	                                	<option value="High" <c:if test="${existingTodo.priority == 'High'}">selected</c:if> >High</option>
+	                                 	<option value="Medium" <c:if test="${existingTodo.priority == 'Medium'}">selected</c:if> >Medium</option>
+	                                 	<option value="Low" <c:if test="${existingTodo.priority == 'Low'}">selected</c:if> >Low</option>
+	                               	</select>
+	                          	</div>
                     
-                                    <div class="input-select">
-                                        <label for="tagid">Tag</label>
-                                        <select name="tagid">
-                                        <c:forEach var="tag" items="${sessionScope.listTag}">
-                                            <option value="${tag.id}" 
-	                                            <c:if test="${tag.id == existingTodo.tag.id}">selected</c:if> >
-	                                            <c:out value="${tag.tagname}"></c:out>
-                                            </option>
-                                        </c:forEach>
-                                        </select>
-
-                                        <!-- <div class="input-error">
-                                            <p>Invalid input</p>
-                                        </div> -->
-                                    </div>
+                             	<div class="input-select">
+                                  	<label for="tagid">Tag</label>
+                                  	<select name="tagid">
+	                                 	<c:forEach var="tag" items="${sessionScope.listTag}">
+	                                  		<option value="${tag.id}" 
+		                               			<c:if test="${tag.id == existingTodo.tag.id}">selected</c:if> >
+		                                		<c:out value="${tag.tagname}"></c:out>
+	                                    	</option>
+	                                   	</c:forEach>
+                                   	</select>
+                                  	<!-- <div class="input-error">
+                                     	<p>Invalid input</p>
+                                   	</div> -->
+                              	</div>
                     
-                                    <div class="input-time">
-                                        <label for="deadline">Deadline</label>
-                                        <input type="time" name="deadline" value = "<c:out value='${existingTodo.deadline}'/>">
-
-                                        <!-- <div class="input-error">
-                                            <p>Invalid input</p>
-                                        </div> -->
-                                    </div>
+                               	<div class="input-time">
+                               		<label for="deadline">Deadline</label>
+                                	<input type="time" name="deadline" value = "<c:out value='${existingTodo.deadline}'/>">
+                                	<!-- <div class="input-error">
+                                    	<p>Invalid input</p>
+                                    </div> -->
+                               	</div>
                                     
-                                    <div class="input-time">
-                                        <label for="remindat">Remind at</label>
-                                        <input type="time" name="remindat" value = "<c:out value='${existingTodo.remindat}'/>">
+								<div class="input-time">
+								    <label for="remindat">Remind at</label>
+								    <input type="time" name="remindat" value = "<c:out value='${existingTodo.remindat}'/>">
+								   	<!-- <div class="input-error">
+										<p>Invalid input</p>
+								   	</div> -->
+								</div>
 
-                                        <!-- <div class="input-error">
-                                            <p>Invalid input</p>
-                                        </div> -->
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="mymodal-footer">
-                                <input type="submit" value="Update" class="btn-submit-on-form">
-                            </div>
-
-                        </form>
-                    </div>
+                         	</div>
+						</div>
+                     	<div class="mymodal-footer">
+                       		<input type="submit" value="Update" class="btn-submit-on-form">
+                     	</div>
+                   	</form>
+               	</div>
             </div>
+            
+            <!-- Form: Edit tag -->
             <c:if test="${openFormEditTag != null}">
-					<div class="mymodal" id="editTagModal" style="display: flex;">
-					
+			<div class="mymodal" id="editTagModal" style="display: flex;">
 			</c:if>
 			
 			<c:if test="${openFormEditTag == null}">
-					<div class="mymodal" id="editTagModal">
+			<div class="mymodal" id="editTagModal">
 			</c:if>
 				
-            <!-- <div class="mymodal" id="addTagModal"> -->
+            	<!-- <div class="mymodal" id="addTagModal"> -->
                 <div class="mymodal-content">
-                
                     <form action="${pageContext.request.contextPath}/updateTag" method="post" >
                         <div class="mymodal-header">
                             <h3>Update tag</h3>
@@ -478,13 +462,12 @@
                         </div>
                         <div class="mymodal-body">
                             <div class="form-container">
-                            
                             	<input type="hidden" name="id" value = "<c:out value='${existingTag.id}'/>" >
                             	<input type="hidden" name="from" value = "tododay" >
                                 
                                 <div class="input-text">
                                     <label for="tagname">Tag:</label>
-                                    <input type="text" maxlength="255" name="tagname" value = "<c:out value='${existingTag.tagname}'/>" required>
+                                    <input type="text" maxlength="50" name="tagname" value = "<c:out value='${existingTag.tagname}'/>" required>
                                 </div>
                 
                                 <div class="input-color">
@@ -499,6 +482,7 @@
                     </form>
                 </div>
             </div>
+            <!-- End Form: Edit tag -->
             
             <div class="mymodal" id="startTodoModal">
 		        <div class="mymodal-content">
@@ -554,13 +538,11 @@
 		        </div>
    		 </div>
 
-            <script src="${pageContext.request.contextPath}/js/todoform.js"></script>
-            <script src="${pageContext.request.contextPath}/js/mymodal.js"></script>
+            
             
         </div>
 
         <div class="left-content">
-        
             <div class="tags-container">
                 <!-- <h2 class="title-tags">Your Tags</h2> -->
                 <div class="tags-inner-container">
@@ -880,7 +862,10 @@
             
         </div>
     </div>
-    
+
+
+    <script src="${pageContext.request.contextPath}/js/todoform.js"></script>
+    <script src="${pageContext.request.contextPath}/js/mymodal.js"></script>
     <script src="${pageContext.request.contextPath}/js/watch.js"></script>
 </body>
 </html>

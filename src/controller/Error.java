@@ -16,19 +16,15 @@ import model.User;
 public class Error extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	HttpSession session = null;
-    
-
+	
     public Error() {
         super();
-        
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession(true);
 		redirect(request, response);
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
@@ -40,7 +36,7 @@ public class Error extends HttpServlet {
 		RequestDispatcher dispatcher;
 		if(user!=null) {
 			response.sendRedirect("listDashboard");
-		}else {
+		} else {
 			dispatcher = request.getRequestDispatcher("index.jsp");
 			dispatcher.forward(request, response);
 		}

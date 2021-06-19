@@ -24,7 +24,6 @@ public class SortTodo extends HttpServlet {
 	UserDao userDao = null;
 	FilterTodo filterTodo=null;
     HttpSession session = null;
-    
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -38,9 +37,7 @@ public class SortTodo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		session = request.getSession(true);
-		
 		sortTodo(request, response);
 	}
 
@@ -99,15 +96,12 @@ public class SortTodo extends HttpServlet {
 	                }
 	                out.println("</ul>");
 	            }
-	       }
-	       out.println("</tr>\n</table>\n</body></html>");
-		}else {
+	        }
+	        out.println("</tr>\n</table>\n</body></html>");
+		} else {
 			System.out.println("Nguoi dung null");
-			
 			RequestDispatcher dispatcher;
-			
 			dispatcher = request.getRequestDispatcher("index.jsp");
-			
 			dispatcher.forward(request, response);
 		}
     }

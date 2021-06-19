@@ -11,8 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.validator.routines.EmailValidator;
+
 import dao.UserDao;
 import model.User;
+import utils.PasswordUtils;
 
 @WebServlet("/resetPassword")
 public class ResetPassword extends HttpServlet {
@@ -37,55 +41,61 @@ public class ResetPassword extends HttpServlet {
 	}
 	
 	private void resetPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String url = "";
-		String email = request.getParameter("email").trim();
-		String password = request.getParameter("password").trim();
 		
-		Pattern emailPattern = Pattern.compile("\\w+@\\w+(.\\w+)*");
-        Matcher emailMatcher = emailPattern.matcher(email);
-        
-        if (!emailMatcher.matches()) {
-        	
-        	request.setAttribute("email", email);
-            request.setAttribute("emailError", "This is not an email address!");
-            request.setAttribute("password", password);
-            url="reset-password.jsp";
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-			dispatcher.forward(request, response);
-			
-        } else if (password.equals("")){
-        	request.setAttribute("email", email);
-            request.setAttribute("password", password);
-            request.setAttribute("passError", "Please enter your new password!");
-            url="reset-password.jsp";
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-			dispatcher.forward(request, response);
-        } 
-        else {
+		String url = "";
+		
+		String email = StringEscapeUtils.escapeHtml4(request.getParameter("email").trim());
+		request.setAttribute("email", email);
+		System.out.println("Email ::: " + email);
+		
+		String password = StringEscapeUtils.escapeHtml4(request.getParameter("password").trim());
+		request.setAttribute("password", password);
+		System.out.println("Password ::: " + password);
+		
+		EmailValidator validator = EmailValidator.getInstance();
+		if (email.length()>100) {
+			System.out.println("Email ::: " + "email.length()>101");
+			request.setAttribute("emailError", "* Invalid email length!"); 
+			url="/reset-password.jsp";
+		} else if (!validator.isValid(email)) {
+			System.out.println("Email ::: " + "validator.isValid(email)");
+			request.setAttribute("emailError", "* Invalid email!"); 
+			url="/reset-password.jsp";
+		}
+		
+		String regexPassword = "[(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%])]{8,20}";
+		Pattern patternPassword = Pattern.compile(regexPassword);
+		
+		if (!patternPassword.matcher(password).matches())
+		{
+			System.out.println("Password ::: " + "!patternPassword.matcher(password).matches()");
+			request.setAttribute("passwordError", "* Password should be between 8 and 20 characters, with at least 1 uppercase, 1 lowercase, 1 digit and 1 special character (@#$%)");
+			url="/reset-password.jsp";
+		}
+		
+		if (url.equals("")) {
         	User user = userDao.existUser(email);
-        	if (user != null) {
-				/*
-				 * userDao.resetPassword(email, password); RequestDispatcher dispatcher =
-				 * request.getRequestDispatcher("login.jsp"); dispatcher.forward(request,
-				 * response);
-				 */
-        		
-        		//request.getSession().setAttribute( "email", email);
-				//request.getSession().setAttribute( "password", password);
+        	if ( user != null ) {
+        		// Hash password
+				String salt = PasswordUtils.generateSalt(20).get();
+				System.out.println("Salt ::: " + salt);
 				
-				url="/reset-password-success.jsp";
-	            userDao.resetPassword(email, password);
+				String passwordSecurity = PasswordUtils.hashPassword(password, salt).get();
+				System.out.println("Password Security ::: " + passwordSecurity);
+				
+        		userDao.resetPassword(email, passwordSecurity, salt);
+        		url="/reset-password-success.jsp";
 	            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
 	            dispatcher.forward(request, response);
-    			
+	            
     		} else {
-    			request.setAttribute("email", email);
-                request.setAttribute("emailError", "User does not exist!");
-                request.setAttribute("password", password);
-                url="reset-password.jsp";
-                RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-    			dispatcher.forward(request, response);
+    			System.out.println("Email ::: " + "(User)userDao.EmailExist(email)) == null");
+    			request.setAttribute("emailError", "* This email is not registered!");
+    			url="/reset-password.jsp"; 
     		}
+        	
+        	RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+			dispatcher.forward(request, response);
         }
 		
 	}

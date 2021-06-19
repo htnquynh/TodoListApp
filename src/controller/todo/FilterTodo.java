@@ -93,7 +93,7 @@ public class FilterTodo extends HttpServlet {
 						
 					}
 				}
-				//lá»�c theo prio
+
 				if(prioFilter.equals("null")==false)
 				{
 					if (result.size() > 0)
@@ -116,7 +116,7 @@ public class FilterTodo extends HttpServlet {
 						}
 					}
 				}
-				//lá»�c theo tag
+
 				if(tagidFilter!=-1)
 				{
 					if (result.size() > 0)
@@ -141,7 +141,7 @@ public class FilterTodo extends HttpServlet {
 						}
 					}
 				}
-				//Lá»ŒC THEO NGĂ€Y
+
 				if(type.equals("date"))
 				{
 					if(datefilter.equals("")==false)
@@ -175,7 +175,7 @@ public class FilterTodo extends HttpServlet {
 						{
 						}
 					}
-					else//ngĂ y rá»—ng thĂ¬ lá»�c theo ngĂ y hĂ´m nay
+					else
 					{
 						String now= LocalDate.now().toString();
 						try {
@@ -206,12 +206,12 @@ public class FilterTodo extends HttpServlet {
 						}
 					}
 				}
-				//lá»�c theo tuáº§n
+
 				else if(type.equals("week"))
 				{
 					if(week.equals("")==false)
 					{
-						//TĂ¡ch tuáº§n vĂ  nÄƒm ra
+
 						String[] parts = week.split("-W");
 						String part1 = parts[0]; 
 						String part2 = parts[1]; 
@@ -292,12 +292,12 @@ public class FilterTodo extends HttpServlet {
 						}
 					}
 				}
-				//lá»�c theo thĂ¡ng
+
 				else if(type.equals("month"))
 				{
 					if(month.equals("")==false)
 					{
-						//TĂ¡ch thĂ¡ng vĂ  nÄƒm
+
 						String[] parts = month.split("-");
 						String part1 = parts[0]; 
 						String part2 = parts[1]; 
@@ -310,7 +310,7 @@ public class FilterTodo extends HttpServlet {
 							calendar.set(Calendar.YEAR, year);
 							// Now get the first day of week.
 							Date datestart = calendar.getTime();
-							//Kiá»ƒm tra thĂ¡ng Ä‘á»ƒ tĂ¬m ngĂ y cuá»‘i thĂ¡ng
+							
 							if (monthh==2)
 							{
 								if((year%400==0||(year%4==0&&year%100!=0)))//nÄƒm nhuáº­n
@@ -367,7 +367,7 @@ public class FilterTodo extends HttpServlet {
 						calendar.set(Calendar.YEAR,Integer.parseInt(part0));
 						// Now get the first day of week.
 						Date datestart = calendar.getTime();
-						//Kiá»ƒm tra thĂ¡ng Ä‘á»ƒ tĂ¬m ngĂ y cuá»‘i thĂ¡ng
+						
 						if (Integer.parseInt(part1)==2)
 							{
 								if((Integer.parseInt(part0)%400==0||(Integer.parseInt(part0)%4==0&&Integer.parseInt(part0)%100!=0)))//nÄƒm nhuáº­n
@@ -413,17 +413,17 @@ public class FilterTodo extends HttpServlet {
 			/////////////////////////////////Sort/////////////////////////////
 			try {
 				if(sort.equals("Sort")) {
-					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio High chÆ°a thá»±c hiá»‡n xong
+					
 					List<Todo> high=new ArrayList<Todo>();
-					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Medium chÆ°a thá»±c hiá»‡n xong
+					
 					List<Todo> medium=new ArrayList<Todo>();
-					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Low chÆ°a thá»±c hiá»‡n xong
+					
 					List<Todo> low=new ArrayList<Todo>();
-					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Hight thá»±c hiá»‡n xong
+					
 					List<Todo> highDone=new ArrayList<Todo>();
-					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Medium chÆ°a thá»±c hiá»‡n xong
+					
 					List<Todo> mediumDone=new ArrayList<Todo>();
-					//táº¡o máº£ng chá»©a cĂ¡c todo cĂ³ prio Low chÆ°a thá»±c hiá»‡n xong
+					
 					List<Todo> lowDone=new ArrayList<Todo>();
 					for(int i=0; i< result.size();i++) {
 						if(result.get(i).getPriority().equals("High")) {
@@ -493,10 +493,10 @@ public class FilterTodo extends HttpServlet {
 					request.setAttribute("listTodo", result);
 					request.setAttribute("listTag", listTag);
 				}
-				System.out.print("Ä‘á»™ dĂ i chuá»—i tráº£ vá»� sau khi sort "+result.size());
+				
 			}
 			catch(Exception e) {
-				System.out.print("Ä‘á»™ dĂ i chuá»—i tráº£ vá»� "+result.size());
+				
 				request.setAttribute("listTodo", result);
 				request.setAttribute("listTag", listTag);
 			}
@@ -515,13 +515,10 @@ public class FilterTodo extends HttpServlet {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("todomonth.jsp");
 				dispatcher.forward(request, response);
 			}
-		}else {
+		} else {
 			System.out.println("Nguoi dung null");
-			
 			RequestDispatcher dispatcher;
-			
 			dispatcher = request.getRequestDispatcher("index.jsp");
-			
 			dispatcher.forward(request, response);
 		}
 	}

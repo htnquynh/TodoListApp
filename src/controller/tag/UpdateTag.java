@@ -3,6 +3,7 @@ package controller.tag;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import dao.TagDao;
 import model.Tag;
@@ -49,18 +52,44 @@ public class UpdateTag extends HttpServlet {
 	private void updateTag(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException, ParseException {
 		User user = (User) session.getAttribute("user");
-		RequestDispatcher dispatcher;
 		if(user!=null) {
-			if(request.getParameter("from").length()<10&&request.getParameter("tagname").length()<101&&request.getParameter("color").length()==7) {
-				String from = request.getParameter("from").trim();
+			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {
 				try {
+					String from = request.getParameter("from");
+					String flag = "";
+					
 					int id = Integer.parseInt(request.getParameter("id"));
-					String tagname = request.getParameter("tagname");
-					String color = request.getParameter("color");
+					String tagname = StringEscapeUtils.escapeHtml4(request.getParameter("tagname").trim());
+					request.setAttribute("tagname", tagname);
+					System.out.println("Tagname ::: " + tagname);
 					
-					Tag tag = new Tag(id, tagname, color, user);
-					tagDao.updateTag(tag);
+					String regexName = "^[\\p{L}\\d]{1}[\\p{L}\\d .'\\-,]{0,49}$";
+					Pattern patternName = Pattern.compile(regexName);
 					
+					if (!patternName.matcher(tagname).matches())
+					{
+						System.out.println("Tagname ::: " + "!pattern.matcher(tagname).matches()");
+						request.setAttribute("tagnameError", "* Tag Name should start with a letter or number and contain only letters, numbers, spaces and characters: (.), (,), (-), (')");
+						flag="error";
+					}
+					
+					String color = StringEscapeUtils.escapeHtml4(request.getParameter("color").trim());
+					request.setAttribute("color", color);
+					System.out.println("Color ::: " + color);
+					
+					String regexColor = "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$";
+					Pattern patternColor = Pattern.compile(regexColor);
+					
+					if (!patternColor.matcher(color).matches()) {
+						System.out.println("Color ::: " + "!patternColor.matcher(color).matches()");
+						request.setAttribute("colorError", "* Color code should be in the form #RRGGBB");
+						flag="error";
+					}
+					
+					if (flag.equals("")) {
+						Tag tag = new Tag(id, tagname, color, user);
+						tagDao.updateTag(tag);
+					}
 					
 					if (from.equals("dashboard")) {
 						response.sendRedirect("listDashboard");
@@ -70,18 +99,23 @@ public class UpdateTag extends HttpServlet {
 						response.sendRedirect("listTodoThisWeek");
 					} else {
 						response.sendRedirect("listTodoThisMonth");
-					}
-				}catch(Exception e) {
-					dispatcher = request.getRequestDispatcher("error.jsp");
-					
+					}	
+				} catch (Exception e) {
+					RequestDispatcher dispatcher = request.getRequestDispatcher("error.jsp");
 					dispatcher.forward(request, response);
 				}
+				
+				
+			} else {
+				RequestDispatcher dispatcher;
+				dispatcher = request.getRequestDispatcher("error.jsp");
+				dispatcher.forward(request, response);
 			}
-		}else {
+			
+		} else {
+			
 			System.out.println("Nguoi dung null");
-			
-			dispatcher = request.getRequestDispatcher("index.jsp");
-			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 			dispatcher.forward(request, response);
 		}
 		

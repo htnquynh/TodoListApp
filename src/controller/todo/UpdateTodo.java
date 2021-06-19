@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import dao.TagDao;
 import dao.TodoDao;
@@ -58,13 +61,41 @@ public class UpdateTodo extends HttpServlet {
 		
 		User user = (User) session.getAttribute("user");
 		if(user!=null) {
-			if(request.getParameter("from").length()<10&&request.getParameter("title").length()<256&&request.getParameter("priority").length()<7) {
+			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || 
+					request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {
 				String from = request.getParameter("from");
 				try {
-					int id = Integer.parseInt(request.getParameter("id"));
 					
-					String title = request.getParameter("title").trim();
-					String priority = request.getParameter("priority").trim();
+					int id = Integer.parseInt(request.getParameter("id"));
+					String flag = "";
+					
+					String title = StringEscapeUtils.escapeHtml4(request.getParameter("title").trim());
+					request.setAttribute("title", title);
+					System.out.println("title ::: " + title);
+					
+					String regexName = "^[\\p{L}\\d]{1}[\\p{L}\\d .'\\-,]{0,99}$";
+					Pattern patternName = Pattern.compile(regexName);
+					
+					if (!patternName.matcher(title).matches())
+					{
+						System.out.println("Title ::: " + "!pattern.matcher(title).matches()");
+						request.setAttribute("titleError", "* Title should start with a letter or number and contain only letters, numbers, spaces and characters: (.), (,), (-), (')");
+						flag = "error";
+					}
+					
+					//String title = request.getParameter("title").trim();
+					
+					//String priority = request.getParameter("priority").trim();
+					
+					String priority = StringEscapeUtils.escapeHtml4(request.getParameter("priority").trim());
+					request.setAttribute("priority", priority);
+					System.out.println("priority ::: " + priority);
+					
+					if ((!priority.equals("High")) && (!priority.equals("Medium")) && (!priority.equals("Low"))) {
+						System.out.println("priority ::: " + "!priority.equals(...)");
+						request.setAttribute("priorityError", "* Invalid priority");
+						flag = "error";
+					}
 					
 					Integer tagid = Integer.parseInt(request.getParameter("tagid").trim());
 
@@ -76,23 +107,11 @@ public class UpdateTodo extends HttpServlet {
 					
 					Todo existingTodo = new Todo(id, title, priority, tag, date);
 					
-					
-					if (title.equals("")) {
-						request.setAttribute("titleError", "* You must enter title");
-					}
-					
-					if (priority.equals("")) {
-						request.setAttribute("priorityError", "* You must enter priority");
-					}
-					
-					if (!title.equals("") && !priority.equals("")) {
-						
+					if (flag.equals("")) {
 						
 						existingTodo.setUser(user);
-						
 						todoDao.updateTodo(existingTodo);
-						
-						
+
 						if (from.equals("dashboard")) {
 							response.sendRedirect("listDashboard");
 						} else if (from.equals("tododay")) {
@@ -122,22 +141,22 @@ public class UpdateTodo extends HttpServlet {
 						
 						dispatcher.forward(request, response);
 					}	
-				}catch (Exception e) {
+				} catch (Exception e) {
 					RequestDispatcher dispatcher;
-					
 					dispatcher = request.getRequestDispatcher("error.jsp");
-					
 					dispatcher.forward(request, response);
 				}
 				
+			} else {
+				RequestDispatcher dispatcher;
+				dispatcher = request.getRequestDispatcher("error.jsp");
+				dispatcher.forward(request, response);
 			}
-		}else {
+			
+		} else {
 			System.out.println("Nguoi dung null");
-			
 			RequestDispatcher dispatcher;
-			
 			dispatcher = request.getRequestDispatcher("index.jsp");
-			
 			dispatcher.forward(request, response);
 		}
 	}
