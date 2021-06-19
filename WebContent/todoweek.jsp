@@ -224,7 +224,7 @@
                                 	
                                     <div class="input-text">
                                         <label for="title">Title</label>
-                                        <input type="text" name="title" value = "<c:out value='${title}'/>" >
+                                        <input type="text" maxlength="100" name="title" value = "<c:out value='${title}'/>" >
                                         
                                         <div class="input-error">
                                             <p><c:out value="${titleError}"/></p>
@@ -333,15 +333,17 @@
                             <div class="mymodal-body">
                             	<input type="hidden" name="from" value = "todoweek" >
                                 <div class="form-container">
-                                    <div class="input-text">
-                                        <label for="title">Tag:</label>
-                                        <input type="text" name="title">
-                                    </div>
-                    
-                                    <div class="input-color">
-                                        <label for="color">Color</label>
-                                        <input type="color" name="color">
-                                    </div>
+									<div class="input-text">
+                                    	<label for="tagname">Tag:</label>
+                                    	<input type="text" maxlength="50" name="tagname" value = "<c:out value='${tagname}'/>" required>
+                                	</div>
+                
+                                	<div class="input-color">
+                                    	<label for="color">Color</label>
+                                    	<input type="color" maxlength="7" name="color" value = "<c:out value='${color}'/>" >
+                                	</div>
+                                    
+                                    
                                 </div>
                             </div>
                             <div class="mymodal-footer">
@@ -382,7 +384,7 @@
                                 	
                                     <div class="input-text">
                                         <label for="title">Title</label>
-                                        <input type="text" name="title" value = "<c:out value='${existingTodo.title}'/>" >
+                                        <input type="text" maxlength="100" name="title" value = "<c:out value='${existingTodo.title}'/>" >
                                         
                                         <div class="input-error">
                                             <p><c:out value="${titleError}"/></p>
@@ -482,12 +484,12 @@
                                 
                                 <div class="input-text">
                                     <label for="tagname">Tag:</label>
-                                    <input type="text" name="tagname" value = "<c:out value='${existingTag.tagname}'/>" required>
+                                    <input type="text" maxlength="50" name="tagname" value = "<c:out value='${existingTag.tagname}'/>" required>
                                 </div>
                 
                                 <div class="input-color">
                                     <label for="color">Color</label>
-                                    <input type="color" name="color" value = "<c:out value='${existingTag.color}'/>" >
+                                    <input type="color" maxlength="7" name="color" value = "<c:out value='${existingTag.color}'/>" >
                                 </div>
                             </div>
                         </div>

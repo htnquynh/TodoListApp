@@ -2,20 +2,27 @@ package controller.tag;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import dao.TagDao;
+import model.Tag;
+import model.User;
 
 @WebServlet("/deleteTag")
 public class DeleteTag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	TagDao tagDao = null;
-    
+	HttpSession session = null;
        
     public DeleteTag() {
         super();
@@ -23,6 +30,7 @@ public class DeleteTag extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession(true);
 		try {
 			deleteTag(request, response);
 		} catch (SQLException e) {
@@ -41,23 +49,37 @@ public class DeleteTag extends HttpServlet {
 	private void deleteTag(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 		
-		String from = request.getParameter("from").trim();
-		
-		System.out.println("From: ");
-		System.out.println(from);
-		
-		int id = Integer.parseInt(request.getParameter("id"));
-		
-		tagDao.deleteTag(id);
-		
-		if (from.equals("dashboard")) {
-			response.sendRedirect("listDashboard");
-		} else if (from.equals("tododay")) {
-			response.sendRedirect("listTodo");
-		} else if (from.equals("todoweek")) {
-			response.sendRedirect("listTodoThisWeek");
+		User user = (User) session.getAttribute("user");
+		if(user!=null) {
+			if(request.getParameter("from").equals("dashboard") || request.getParameter("from").equals("tododay") || request.getParameter("from").equals("todoweek") || request.getParameter("from").equals("todomonth")) {
+				
+				String from = request.getParameter("from");
+				
+				int id = Integer.parseInt(request.getParameter("id"));
+				
+				tagDao.deleteTag(id);
+				
+				if (from.equals("dashboard")) {
+					response.sendRedirect("listDashboard");
+				} else if (from.equals("tododay")) {
+					response.sendRedirect("listTodo");
+				} else if (from.equals("todoweek")) {
+					response.sendRedirect("listTodoThisWeek");
+				} else {
+					response.sendRedirect("listTodoThisMonth");
+				}	
+				
+			} else {
+				RequestDispatcher dispatcher;
+				dispatcher = request.getRequestDispatcher("error.jsp");
+				dispatcher.forward(request, response);
+			}
+			
 		} else {
-			response.sendRedirect("listTodoThisMonth");
+			System.out.println("Nguoi dung null");
+			RequestDispatcher dispatcher;
+			dispatcher = request.getRequestDispatcher("index.jsp");
+			dispatcher.forward(request, response);
 		}
 	}
 

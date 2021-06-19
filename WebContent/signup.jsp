@@ -118,17 +118,17 @@
 	String birthdateError = (String)request.getAttribute("birthdateError");
 	if (birthdateError == null) birthdateError = "";
 	
-	String email = request.getParameter("email");
+	String email = (String)request.getAttribute("email");
 	if (email == null) email = "";
 	
-	String password = request.getParameter("password");
+	String password = (String)request.getAttribute("password");
 	if (password == null) password = "";
 	
-	String fullname = request.getParameter("fullname");
+	String fullname = (String)request.getAttribute("fullname");
 	if (fullname == null) fullname = "";
 	
 	String gender = request.getParameter("gender");
-	String birthdate = request.getParameter("birthdate");
+	String birthdate = (String)request.getAttribute("birthdate");
 %>
     <%-- <a id="btn-open-signupModal" class="btn-open-mymodal">Sign Up</a> --%>
     <div class="login-form">
@@ -139,7 +139,7 @@
 
                     <div class="input-text">
                         <label for="email">Email:</label>
-                        <input type="text" name="email" value="<%= email %>">
+                        <input type="text" maxlength="100" name="email" value="<%= email %>">
                         
                         <div class="input-error">
                     		<p><%= emailError %></p>
@@ -148,7 +148,7 @@
     
                     <div class="input-password">
                         <label for="password">Password</label>
-                        <input type="password" name="password" value="<%= password %>">
+                        <input type="password" maxlength="20" name="password" value="<%= password %>">
                         
                         <div class="input-error">
                     		<p><%= passwordError %></p>
@@ -157,7 +157,7 @@
 
                     <div class="input-text">
                         <label for="fullname">Your name</label>
-                        <input type="text" name="fullname" value="<%= fullname %>">
+                        <input type="text" maxlength="50" name="fullname" value="<%= fullname %>">
                     	
                     	<div class="input-error">
                     		<p><%= fullnameError %></p>
@@ -204,7 +204,7 @@
     		<rect fill="none" height="16" width="16"/>
     		<path d="M15,5l-1.41,1.41L18.17,11H2V13h16.17l-4.59,4.59L15,19l7-7L15,5z"/>
     	</svg>
-</a>
+		</a>
     </div>
 
     <script src="${pageContext.request.contextPath}/js/todoform.js"></script>

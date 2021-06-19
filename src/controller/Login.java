@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,8 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.text.*;
+import org.apache.commons.validator.routines.EmailValidator;
+
 import dao.UserDao;
 import model.User;
+import utils.PasswordUtils;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
@@ -24,7 +29,6 @@ public class Login extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		try {
 			login(request, response);
 		} catch (Exception e) {
@@ -36,50 +40,47 @@ public class Login extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	/*
-	 * private void login(HttpServletRequest request, HttpServletResponse response)
-	 * throws Exception { String email = request.getParameter("email").trim();
-	 * String password = request.getParameter("password").trim();
-	 * 
-	 * User user = userDao.login(email, password);
-	 * 
-	 * if (user != null) { session.setAttribute("user", user);
-	 * response.sendRedirect("listTag");
-	 * 
-	 * } else { throw new Exception("Login not successful..."); } }
-	 */
-	
 	private void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String url = "";
-		String email = request.getParameter("email").trim();
+		
+		String email  = StringEscapeUtils.escapeHtml4(request.getParameter("email").trim());
 		System.out.println("Email: " + email);
-		String password = request.getParameter("password").trim();
+		request.setAttribute("email", email);
+		
+		String password = StringEscapeUtils.escapeHtml4(request.getParameter("password").trim());
 		System.out.println("Password: " + password);
-
-		if (email.equals("")== true)
-		{
-			request.setAttribute("emailError", "* You must enter email");
+		request.setAttribute("password", password);
+		
+		EmailValidator validator = EmailValidator.getInstance();
+		if (email.length()>101) {
+			System.out.println("Email ::: " + "email.length()>101");
+			request.setAttribute("emailError", "* Invalid email length!"); 
+			url="/login.jsp";
+		} else if (!validator.isValid(email)) {
+			System.out.println("Email ::: " + "validator.isValid(email)");
+			request.setAttribute("emailError", "* Invalid email!"); 
 			url="/login.jsp";
 		}
-		else
+		
+		if(password.equals(""))
+		{
+			System.out.println("Password ::: " + "password.equals(\"\")");
+			request.setAttribute("passwordError", "* You must enter password");
+			url="/login.jsp";
+		}
+		
+		if (url.equals(""))
 		{
 			User user = userDao.EmailExist(email);
 			
 			if (user != null) {
-				if (user.getPassword().equals(password))
+				String salt = user.getSalt();
+				String key = user.getPassword();
+				
+				if (PasswordUtils.correctPassword(password, key, salt))
 				{
-					HttpSession session = request.getSession(false);
+					HttpSession session = request.getSession(true);
 					session.setAttribute("user", user);
-					
-					/*
-					 * List<Todo> listTodo = userDao.getTodosByUser(user.getId()); List<Tag> listTag
-					 * = userDao.getTagsByUser(user.getId());
-					 * 
-					 * request.setAttribute("listTodo", listTodo); request.setAttribute("listTag",
-					 * listTag);
-					 */
-					
-					/* url="/todolist.jsp"; */
 				}
 				else
 				{
@@ -90,25 +91,17 @@ public class Login extends HttpServlet {
 			} else {
 				url="/login.jsp";
 				request.setAttribute("emailError", "* Email not registered");
-			}	
+			}
 		}
-		
-		if(password.equals(""))
-		{
-			request.setAttribute("passwordError", "* You must enter password");
-			url="/login.jsp";
-		}
-		
+
 		if (url.equals("")) {
 			System.out.println("Chuyen qua listDashboard");
 			response.sendRedirect("listDashboard");
-			
 		} else {
 			RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 			dispatcher.forward(request, response);
 		}
 		
 	}
-	
 	
 }

@@ -124,9 +124,11 @@
 	if (emailError == null) emailError = "";
 	String passwordError = (String)request.getAttribute("passwordError");
 	if (passwordError == null) passwordError ="";
-	String email = request.getParameter("email");
+	String email = (String)request.getAttribute("email");
 	if (email == null) email = "";
-	String password = request.getParameter("password");
+	String password =(String)request.getAttribute("password");
+	System.out.println("Emailllllll: " + password);
+	if (password == null) password = "";
 %>
 
 	<div class="right-decor">
@@ -169,7 +171,6 @@
                       </div>
                 </div>
                 
-
             </div>
 
             <input type="submit" value="Login" class="btn-submit-on-form">
@@ -178,12 +179,7 @@
         		<a href="${pageContext.request.contextPath}/reset-password.jsp">Forget your password?</a>
         	</div>
         </form>
-        
-        
-        
     </div>
-    
-    
 
     <script src="${pageContext.request.contextPath}/js/todoform.js"></script>
     <%-- <script src="${pageContext.request.contextPath}/js/signupmodal.js"></script> --%>
