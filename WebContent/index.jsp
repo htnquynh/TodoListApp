@@ -129,6 +129,10 @@
     
 </head>
 <body >
+<% 
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
+	response.setHeader("pragma ", "no-cache");
+%>
 
 	<div class="right-decor">
     	<h3>Welcome to Todo App</h3>

@@ -31,6 +31,11 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/barChart.css">
 </head>
 <body onload="initCalendar()">
+<% 
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
+	response.setHeader("pragma ", "no-cache");
+%>
+
 <%
     User user = (User)session.getAttribute("user");
     if(user == null ){ %>

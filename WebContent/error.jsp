@@ -19,6 +19,10 @@
     
 </head>
 <body >
+<% 
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
+	response.setHeader("pragma ", "no-cache");
+%>
 	<div id="notfound">
 		<div class="notfound">
 			<div class="notfound-bg">

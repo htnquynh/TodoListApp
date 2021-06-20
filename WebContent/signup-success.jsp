@@ -121,7 +121,10 @@
     
 </head>
 <body >
-
+<% 
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
+	response.setHeader("pragma ", "no-cache");
+%>
 	<div class="login-form">
 	    <h3>
 	    	<svg xmlns="http://www.w3.org/2000/svg" 

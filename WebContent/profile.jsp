@@ -24,6 +24,11 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/week.css">
 </head>
 <body onload="initCalendar()">
+<% 
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
+	response.setHeader("pragma ", "no-cache");
+%>
+
 <%
     User user = (User)session.getAttribute("user");
     if(user == null ){ %>

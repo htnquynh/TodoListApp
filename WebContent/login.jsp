@@ -118,6 +118,10 @@
     
 </head>
 <body >
+<% 
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
+	response.setHeader("pragma ", "no-cache");
+%>
 
 <%
 	String emailError = (String)request.getAttribute("emailError");
