@@ -33,6 +33,7 @@ public class ResetPassword extends HttpServlet {
 			resetPassword(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.sendRedirect("index.jsp");
 		}
 	}
 	

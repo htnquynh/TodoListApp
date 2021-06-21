@@ -33,6 +33,7 @@ public class Login extends HttpServlet {
 			login(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.sendRedirect("index.jsp");
 		}
 	}
 
@@ -41,6 +42,7 @@ public class Login extends HttpServlet {
 	}
 	
 	private void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
 		String url = "";
 		
 		String email  = StringEscapeUtils.escapeHtml4(request.getParameter("email").trim());

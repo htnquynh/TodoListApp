@@ -18,6 +18,21 @@
 		<location>/error.jsp</location>
 	</error-page>
 	
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+	
+	<error-page>
+    	<exception-type>java.io.IOException</exception-type>
+    	<location>/index.jsp</location>
+	</error-page>
+
+	<error-page>
+    	<exception-type>java.lang.Throwable</exception-type>
+    	<location>/index.jsp</location>
+	</error-page>
+
 	<filter>
 	  	<filter-name>HeaderSecurityFilter</filter-name>
 	  	<filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>

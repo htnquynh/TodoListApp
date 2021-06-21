@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@page import="model.*"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,6 +106,12 @@
     
 </head>
 <body >
+<%
+    User user = (User)session.getAttribute("user");
+    if(user != null ){ %>
+    <jsp:forward page="error.jsp"/>
+    <% }%>
+    
 <% 
 	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
 	response.setHeader("pragma ", "no-cache");

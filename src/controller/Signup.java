@@ -39,6 +39,7 @@ public class Signup extends HttpServlet {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			response.sendRedirect("index.jsp");
 		}
 	}
 
@@ -134,6 +135,7 @@ public class Signup extends HttpServlet {
 				System.out.println("Password Security ::: " + passwordSecurity);
 				
 				User newUser = new User(email, passwordSecurity, salt, fullname, gender);
+				
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				Date birthdate = df.parse(birthdate_str);
 				newUser.setBirthdate(birthdate);
